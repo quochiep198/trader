@@ -30,4 +30,16 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          hf upload quochiepho/traider ./backend . --repo-type space --token $HF_TOKEN
+          python -c '
+          import os
+          from huggingface_hub import HfApi
+          api = HfApi(token=os.environ["HF_TOKEN"])
+          print("Uploading backend folder to Hugging Face Space...")
+          api.upload_folder(
+              folder_path="./backend",
+              repo_id="quochiepho/traider",
+              repo_type="space",
+              path_in_repo="."
+          )
+          print("Upload completed successfully!")
+          '
