@@ -8,12 +8,12 @@ Tài liệu này đặc tả yêu cầu nghiệp vụ, giao diện, dữ liệu 
 
 ### Trong phạm vi MVP:
 *   Form nhập lệnh dự định: Symbol, Action (BUY/SELL_TO_CLOSE), Price, Quantity, Stop-loss, Take-profit, Reason, Emotion text, Confidence.
-*   SELL chỉ hỗ trợ `SELL_TO_CLOSE` (đóng vị thế), không hỗ trợ bán khống.
+*   SELL chỉ hỗ trợ `SELL_TO_CLOSE` (đóng vị thế), không hỗ trợ bán khống. Lệnh `SELL_TO_CLOSE` không yêu cầu nhập Stop-loss (SL) và Take-profit (TP).
 *   AI đọc text (`reason`, `emotion_text`) để phân loại cảm xúc (FOMO, Panic, Revenge, Overconfidence, Greed, Hesitation) và cho điểm từ 0-10.
 *   AI sinh thông điệp kỷ luật (Coach message).
 *   AI Guardrails: Cấm tuyệt đối khuyên mua/bán, hứa hẹn lợi nhuận, hoặc dự đoán giá.
 *   AI Fallback: Nếu AI lỗi/timeout (đặt ngưỡng 4.5 giây), hệ thống vẫn trả về kết quả rủi ro toán học và rule check từ backend kèm thông điệp fallback.
-*   Lưu trữ: Chỉ lưu kết quả cấu trúc JSON của AI thô tối đa 30 ngày. Không lưu full chat transcript cuộc đối thoại AI.
+*   Lưu trữ: Chỉ lưu kết quả cấu trúc JSON của AI thô tối đa 30 ngày (sẽ được tự động xóa hàng tuần bằng Background Cron task trên máy chủ). Không lưu full chat transcript cuộc đối thoại AI.
 
 ---
 
@@ -23,7 +23,8 @@ Tài liệu này đặc tả yêu cầu nghiệp vụ, giao diện, dữ liệu 
 |---|---|---|
 | **R-TCHECK-1** | Pre-trade check là phân tích trước giao dịch nhằm hỗ trợ tâm lý, không phải lệnh đặt thực tế và không kết nối sàn chứng khoán. | AC-TCHECK-1/v1, AC-REG-1/v1 |
 | **R-TCHECK-2** | Kết quả thành công phải trả đầy đủ: discipline_score, risk_level, emotion_scores, rule_violations, risk_calculation, should_cooldown và coach_message. | AC-TCHECK-2/v1 |
-| **R-TCHECK-3** | Input đầu vào thiếu/sai phải bị chặn ở mức nghiệp vụ đầu API và hiển thị lỗi cụ thể. | AC-TCHECK-3/v1 |
+| **R-TCHECK-3** | Input đầu vào thiếu/sai phải bị chặn ở API. Lệnh `BUY` bắt buộc có SL/TP thỏa mãn $SL < \text{Price} < TP$. Lệnh `SELL_TO_CLOSE` bỏ qua/vô hiệu hóa SL/TP. | AC-TCHECK-3/v1 |
+| **R-COOLDOWN-1** | Việc kích hoạt Soft Cooldown do trả thù giao dịch hoặc FOMO hoàn toàn dựa trên điểm số cảm xúc do AI chấm (khi `revenge_score >= 8` hoặc `fomo_score >= 8`). | AC-EMOTION-2/v1 |
 | **R-EMOTION-1** | AI bắt buộc phải trả về dữ liệu có cấu trúc định dạng JSON thô (Structured JSON Output). | AC-EMOTION-1/v1 |
 | **R-EMOTION-2** | Điểm số cảm xúc từ AI phải nằm trên thang từ 0 đến 10 (0-2: Thấp, 3-5: Trung bình, 6-8: Cao, 9-10: Rất cao). | AC-EMOTION-2/v1, AC-EMOTION-3/v1 |
 | **R-EMOTION-3** | Nếu AI gặp sự cố kỹ thuật hoặc timeout (4.5s), hệ thống kích hoạt luồng Fallback để tính toán rủi ro toán học và check luật. | AC-EMOTION-5/v1 |
@@ -90,9 +91,12 @@ Giao diện tuân thủ phong cách **Corporate / Modern** kết hợp **Tactile
    * **Conviction Level:** Thanh trượt (Slider range) chọn mức độ tự tin từ `0` (Speculative) đến `10` (High Certainty).
 
 6. **Khối quản trị rủi ro (Risk Guardrails Card - 5 cột):**
-   * **Stop-Loss:** Ô nhập điểm cắt lỗ bắt buộc. Nếu để trống hoặc nhập `0`, hiển thị cảnh báo vi phạm màu đỏ: `DANGER: Executing without SL is a violation of Rule #1.`
-   * **Take-Profit:** Ô nhập điểm chốt lời mục tiêu.
-   * **Risk/Reward Ratio:** Tự động tính toán tỷ lệ Lợi nhuận/Rủi ro hiển thị dạng số đơn sắc (ví dụ: `1:2.4` màu xanh lục).
+   * **Stop-Loss:** Ô nhập điểm cắt lỗ bắt buộc đối với lệnh `BUY`. Đối với lệnh `SELL_TO_CLOSE`, ô này sẽ bị vô hiệu hóa (disabled). Nếu để trống hoặc nhập `0` đối với lệnh `BUY`, hiển thị cảnh báo vi phạm màu đỏ: `DANGER: Executing without SL is a violation of Rule #1.`
+   * **Take-Profit:** Ô nhập điểm chốt lời mục tiêu đối với lệnh `BUY` (vô hiệu hóa đối với lệnh `SELL_TO_CLOSE`).
+   * **Risk/Reward Ratio:** Tự động tính toán tỷ lệ Lợi nhuận/Rủi ro hiển thị dạng số đơn sắc (ví dụ: `1:2.4` màu xanh lục). Áp dụng cho lệnh `BUY` theo công thức:
+     $$\text{Risk} = \text{Entry Price} - \text{Stop Loss}$$
+     $$\text{Reward} = \text{Take Profit} - \text{Entry Price}$$
+     $$\text{R:R Ratio} = 1 : \left(\frac{\text{Reward}}{\text{Risk}}\right)$$
 
 7. **Khối trạng thái tâm lý (Mental State Card - 5 cột):**
    * **How are you feeling right now?:** Hộp nhập liệu lớn dạng textarea để mô tả trung thực tâm lý hiện tại.
@@ -115,14 +119,14 @@ Khi người dùng nhấn `Analyze Trade`, hệ thống sẽ kích hoạt một 
      * **Tiêu đề:** `Soft Cooldown Triggered` kèm icon cảnh báo.
      * **Nội dung lý giải cảm xúc:** Trích xuất đoạn phân tích của AI: *"Your description suggests a 'Revenge Trade' pattern. You mentioned a previous loss 14 minutes ago. This trade entry is aggressive."*
      * **Câu hỏi phản tỉnh bắt buộc (Reflective Question):** Hộp nhập liệu dạng textarea bắt buộc người dùng nhập suy nghĩ trước câu hỏi phản tỉnh: *"Does this trade meet 100% of your pre-defined strategy rules, or is it an emotional reaction?"*
-     * **Nút điều hướng:** Nút hủy lệnh (`Cancel Trade`) và nút xác nhận tiếp tục (`Acknowledge & Proceed`) có độ trễ hoặc ràng buộc nhập câu hỏi phản tỉnh mới được kích hoạt.
+     * **Nút điều hướng:** Nút hủy lệnh (`Cancel Trade`) và nút xác nhận tiếp tục (`Acknowledge & Proceed`) có độ trễ hoặc ràng buộc nhập câu hỏi phản tỉnh mới được kích hoạt. Câu trả lời phản tỉnh này sẽ được lưu lại vào hệ thống.
 
 ---
 
 ## 4. Dữ liệu & State Transitions
 
 ### 4.1 Bảng dữ liệu Emotion Logs
-*   `emotion_logs`: `id`, `user_id`, `trade_id`, `reason`, `emotion_text`, `emotion_tags`, `fomo_score`, `panic_score`, `revenge_score`, `overconfidence_score`, `greed_score`, `hesitation_score`, `discipline_risk`, `coach_message`, `raw_ai_response`, `created_at`.
+*   `emotion_logs`: `id`, `user_id`, `trade_id`, `reason`, `emotion_text`, `emotion_tags`, `fomo_score`, `panic_score`, `revenge_score`, `overconfidence_score`, `greed_score`, `hesitation_score`, `discipline_risk`, `should_cooldown`, `reflective_answer`, `cooldown_acknowledged`, `coach_message`, `raw_ai_response`, `created_at`.
 
 ### 4.2 Luồng Sequence xử lý AI và Fallback
 ```mermaid
@@ -164,7 +168,8 @@ sequenceDiagram
 *   **AC-GUARD-1/v1:** AI coach không đưa khuyến nghị đầu tư/mua bán cụ thể.
 *   **AC-GUARD-2/v1:** AI được phép đưa cảnh báo kỷ luật.
 *   **AC-GUARD-3/v1:** Hiển thị disclaimer mặc định VN-MVP-v1 trên các trang kết quả/báo cáo.
-*   **AC-GUARD-4/v1:** Log AI response lưu trữ tối đa 30 ngày phục vụ audit.
+*   **AC-GUARD-4/v1:** Log AI response lưu trữ tối đa 30 ngày phục vụ audit, tự động dọn dẹp hàng tuần bằng Background Cron task trên máy chủ.
+*   **AC-GUARD-5/v1:** Lưu trữ câu trả lời phản tỉnh (`reflective_answer`) và trạng thái xác nhận kỷ luật (`cooldown_acknowledged`) của người dùng khi kích hoạt Soft Cooldown.
 
 ---
 
