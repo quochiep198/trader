@@ -18,15 +18,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Push backend subdirectory to Hugging Face Space
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Hugging Face CLI
+        run: pip install huggingface_hub
+
+      - name: Upload to Hugging Face Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          # 1. Thiet lap Git Credentials
-          git config --global user.email "deploy-bot@trademind.ai"
-          git config --global user.name "Deploy Bot"
-          
-          # 2. Add remote Hugging Face Space
-          git remote add hf https://quochiepho:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/quochiepho/traider
-          
-          # 3. Tach thu muc 'backend' ra thanh mot nhanh tam thoi va force push len Space
-          git subtree split --prefix=backend -b temp-hf-branch
-          git push hf temp-hf-branch:main --force
+          huggingface-cli upload quochiepho/traider ./backend . --repo-type space --token $HF_TOKEN
