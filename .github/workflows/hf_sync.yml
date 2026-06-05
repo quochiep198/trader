@@ -23,8 +23,7 @@ jobs:
           git config --global user.name "Deploy Bot"
           
           # 2. Add remote Hugging Face Space
-          # LƯU Ý: Thay the QuocHiep/trademind-backend-api bang username va ten space thuc te cua ban
-          git remote add hf https://QuocHiep:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/QuocHiep/trademind-backend-api
+          git remote add hf https://quochiepho:${{ secrets.trader }}@huggingface.co/spaces/quochiepho/traider
           
           # 3. Su dung git subtree de chi push noi dung THU MUC CON 'backend' len ROOT cua Hugging Face
           git subtree push --prefix=backend hf main --force
