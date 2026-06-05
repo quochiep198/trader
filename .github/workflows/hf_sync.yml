@@ -27,5 +27,6 @@ jobs:
           # 2. Add remote Hugging Face Space
           git remote add hf https://quochiepho:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/quochiepho/traider
           
-          # 3. Su dung git subtree de chi push noi dung THU MUC CON 'backend' len ROOT cua Hugging Face
-          git subtree push --prefix=backend hf main --force
+          # 3. Tach thu muc 'backend' ra thanh mot nhanh tam thoi va force push len Space
+          git subtree split --prefix=backend -b temp-hf-branch
+          git push hf temp-hf-branch:main --force
