@@ -9,11 +9,29 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 JWT_SECRET = "supersecretkey_for_trademind_ai"
 ALGORITHM = "HS256"
 
+import hashlib
+
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+    # 1. Try verification with SHA-256 pre-hashing (new standard)
+    sha256_hash = hashlib.sha256(plain_password.encode("utf-8")).hexdigest()
+    try:
+        if pwd_context.verify(sha256_hash, hashed_password):
+            return True
+    except Exception:
+        pass
+
+    # 2. Fallback to direct verification (for legacy passwords <= 72 characters)
+    try:
+        if len(plain_password.encode("utf-8")) <= 72:
+            return pwd_context.verify(plain_password, hashed_password)
+    except Exception:
+        pass
+    return False
 
 def get_password_hash(password: str) -> str:
-    return pwd_context.hash(password)
+    # Pre-hash the password with SHA-256 to ensure it is always 64 bytes/chars
+    sha256_hash = hashlib.sha256(password.encode("utf-8")).hexdigest()
+    return pwd_context.hash(sha256_hash)
 
 def create_access_token(subject: Union[str, Any], expires_delta: timedelta = None) -> str:
     if expires_delta:
