@@ -31,7 +31,7 @@ def get_rules(
             Rule(user_id=current_user.id, rule_type="cooldown_after_loss", rule_value="24", is_active=False),
             Rule(user_id=current_user.id, rule_type="prevent_oversized_trade", rule_value="-15", is_active=True),
         ]
-        db.bulk_save_objects(default_rules)
+        db.add_all(default_rules)
         db.commit()
         # Lấy lại danh sách rule sau khi seed
         rules = db.query(Rule).filter(Rule.user_id == current_user.id).all()

@@ -56,7 +56,7 @@ def register(payload: RegisterPayload, db: Session = Depends(get_db)) -> Any:
         Rule(user_id=new_user.id, rule_type="cooldown_after_loss", rule_value="24", is_active=False),
         Rule(user_id=new_user.id, rule_type="prevent_oversized_trade", rule_value="-15", is_active=True),
     ]
-    db.bulk_save_objects(default_rules)
+    db.add_all(default_rules)
     db.commit()
 
     return {
