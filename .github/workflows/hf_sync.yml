@@ -37,7 +37,7 @@ jobs:
           print("Uploading backend folder to Hugging Face Space...")
           api.upload_folder(
               folder_path="./backend",
-              repo_id="quochiepho/traider",
+              repo_id="quochiep198/trader",
               repo_type="space",
               path_in_repo="."
           )
