@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import styles from '../styles/css/PreTradeCheck.module.css';
 import { MessageProperties } from '../services/message';
 import api from '../services/api';
