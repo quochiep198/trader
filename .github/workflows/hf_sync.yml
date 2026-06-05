@@ -39,7 +39,7 @@ jobs:
               exit(1)
           
           api = HfApi(token=token)
-          repo_id = "quochiep198/trader"
+          repo_id = "quochiepho/trader"
           
           try:
               print("Testing authentication with HF_TOKEN...")
