@@ -1,0 +1,30 @@
+name: Sync to Hugging Face Spaces
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/hf_sync.yml'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Push backend subdirectory to Hugging Face Space
+        run: |
+          # 1. Thiet lap Git Credentials
+          git config --global user.email "deploy-bot@trademind.ai"
+          git config --global user.name "Deploy Bot"
+          
+          # 2. Add remote Hugging Face Space
+          # LƯU Ý: Thay the QuocHiep/trademind-backend-api bang username va ten space thuc te cua ban
+          git remote add hf https://QuocHiep:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/QuocHiep/trademind-backend-api
+          
+          # 3. Su dung git subtree de chi push noi dung THU MUC CON 'backend' len ROOT cua Hugging Face
+          git subtree push --prefix=backend hf main --force
