@@ -24,10 +24,10 @@ jobs:
           python-version: '3.10'
 
       - name: Install Hugging Face CLI
-        run: pip install huggingface_hub
+        run: pip install -U "huggingface_hub[cli]"
 
       - name: Upload to Hugging Face Space
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          huggingface-cli upload quochiepho/traider ./backend . --repo-type space --token $HF_TOKEN
+          hf upload quochiepho/traider ./backend . --repo-type space --token $HF_TOKEN
