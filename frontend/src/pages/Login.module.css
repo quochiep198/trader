@@ -1,0 +1,120 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100vw;
+  background: var(--gradient-bg);
+  padding: 24px;
+}
+
+.card {
+  width: 100%;
+  max-width: 440px;
+  background-color: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  box-shadow: var(--shadow-glass);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.logo {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #fff 30%, hsl(var(--primary)) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: hsl(var(--text-secondary));
+  line-height: 1.4;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -8px;
+  margin-bottom: 24px;
+}
+
+.forgot {
+  font-size: 0.825rem;
+  color: hsl(var(--text-secondary));
+}
+
+.forgot:hover {
+  color: hsl(var(--primary));
+}
+
+.footer {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 0.9rem;
+  color: hsl(var(--text-secondary));
+}
+
+.footer a {
+  font-weight: 500;
+}
+
+.disclaimer {
+  text-align: center;
+  font-size: 0.725rem;
+  color: hsl(var(--text-muted));
+  margin-top: 32px;
+  line-height: 1.4;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  padding-top: 16px;
+}
+
+/* Alerts */
+.errorAlert {
+  display: flex;
+  gap: 12px;
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.successAlert {
+  display: flex;
+  gap: 12px;
+  background-color: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.alertIcon {
+  font-size: 1.1rem;
+}
+
+.alertText {
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.errorAlert .alertText {
+  color: hsl(var(--color-danger));
+}
+
+.successAlert .alertText {
+  color: hsl(var(--color-success));
+}
