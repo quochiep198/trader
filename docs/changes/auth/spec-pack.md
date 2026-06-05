@@ -32,6 +32,95 @@ Tài liệu này đặc tả chi tiết yêu cầu nghiệp vụ, giao diện, d
 
 ## 3. Bản vẽ màn hình & Luồng UI (Wireframes)
 
+### Màn hình Đăng nhập (Login):
+```text
++----------------------------------------------------+
+| TRADEMIND AI - LOGIN                               |
+|----------------------------------------------------|
+|                  [🧠 Psychology Icon]              |
+|                      TradeMind AI                  |
+|       Master your trading discipline with          |
+|       AI-powered coaching.                         |
+|                                                    |
+| EMAIL ADDRESS                                      |
+| [✉ mail   | trader@firm.com                      ] |
+|                                                    |
+| PASSWORD                             Forgot password?|
+| [🔒 lock   | ••••••••                        👁  ] |
+|                                                    |
+| [x] Remember me for 30 days                        |
+|                                                    |
+| [ Sign In                                  arrow_f ] |
+|                                                    |
+| ----------------------- OR ----------------------- |
+|                                                    |
+| [ G | Sign in with Institutional SSO             ] |
+|                                                    |
+| New to TradeMind? Create an account                |
+|----------------------------------------------------|
+| Mandatory Investment Disclaimer:                   |
+| Trading financial instruments involves significant  |
+| risk. Educational insights only.                   |
++----------------------------------------------------+
+```
+
+### Màn hình Đăng ký (Register):
+```text
++----------------------------------------------------+
+| TRADEMIND AI - CREATE ACCOUNT                      |
+|----------------------------------------------------|
+|                      TradeMind AI                  |
+|       Mastering psychology for market precision.   |
+|                                                    |
+| Create Account                                     |
+| Begin your journey toward disciplined trading.     |
+|                                                    |
+| FULL NAME                                          |
+| [👤 person | Enter your full name                ] |
+|                                                    |
+| EMAIL ADDRESS                                      |
+| [✉ mail   | email@example.com                    ] |
+|                                                    |
+| PASSWORD                  CONFIRM PASSWORD         |
+| [🔒 lock   | ••••••••   ] [🔒 lock_reset | •••••••] |
+|                                                    |
+| [x] I agree to the Terms of Service and Privacy    |
+|     Policy.                                        |
+|                                                    |
+| [ Create Account                           arrow_f ] |
+|                                                    |
+| Already have an account? Log in                    |
+|----------------------------------------------------|
+| Risk Disclosure & Investment Disclaimer:            |
+| Trading involves substantial risk of loss.         |
++----------------------------------------------------+
+```
+
+### Màn hình Khôi phục mật khẩu (Forgot Password):
+```text
++----------------------------------------------------+
+| TRADEMIND AI - RECOVER ACCOUNT                     |
+|----------------------------------------------------|
+|                  [🧠 Psychology Icon]              |
+|                      TradeMind AI                  |
+|                      Discipline Coach              |
+|                                                    |
+| Recover Account                                    |
+| Enter your email address and we will send you a    |
+| link to reset your password.                       |
+|                                                    |
+| EMAIL ADDRESS                                      |
+| [✉ mail   | name@firm.com                        ] |
+|                                                    |
+| [ Send Reset Link                          arrow_f ] |
+|                                                    |
+| <- Back to Login                                   |
+|----------------------------------------------------|
+| Mandatory Investment Disclaimer:                   |
+| Trading involves significant risk.                 |
++----------------------------------------------------+
+```
+
 ### Màn hình Profile Setup / Risk Profile:
 ```text
 +------------------------------------+

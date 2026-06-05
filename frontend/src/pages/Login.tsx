@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import Input from '../components/Input';
-import Button from '../components/Button';
-import styles from './Login.module.css';
+import styles from '../styles/css/Login.module.css';
+import { useAuth } from '../context/AuthContext';
+import api from '../services/api';
+import { MessageProperties } from '../services/message';
 
 export const Login: React.FC = () => {
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   
   // Validation and API states
   const [emailError, setEmailError] = useState('');
@@ -20,18 +24,18 @@ export const Login: React.FC = () => {
     setPasswordError('');
 
     if (!email) {
-      setEmailError('Vui lòng nhập Email');
+      setEmailError(MessageProperties.EMAIL_REQUIRED);
       valid = false;
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      setEmailError('Email không đúng định dạng');
+      setEmailError(MessageProperties.EMAIL_INVALID);
       valid = false;
     }
 
     if (!password) {
-      setPasswordError('Vui lòng nhập mật khẩu');
+      setPasswordError(MessageProperties.PASSWORD_REQUIRED);
       valid = false;
     } else if (password.length < 8) {
-      setPasswordError('Mật khẩu tối thiểu phải từ 8 ký tự');
+      setPasswordError(MessageProperties.PASSWORD_MIN_LENGTH);
       valid = false;
     }
 
@@ -47,95 +51,210 @@ export const Login: React.FC = () => {
 
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:8000/api/v1/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      const response = await api.post('/auth/login', { email, password });
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (response.status === 200) {
+        // Visual transition corresponding to HTML JS mockup:
+        // Delay 1s to show the beautiful visual success state transition
         setSuccess(true);
-        // Save token to localStorage as chotted in spec
-        localStorage.setItem('access_token', data.access_token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        console.log('Login successful!', data);
-      } else {
-        setApiError(data.detail || 'Mật khẩu hoặc email không chính xác');
+        login(response.data.access_token, response.data.user, rememberMe);
+        console.log('Login successful!', response.data);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('API connection failed', error);
-      setApiError('Không thể kết nối tới máy chủ. Vui lòng kiểm tra lại backend.');
+      if (error.response && error.response.data) {
+        setApiError(error.response.data.detail || MessageProperties.LOGIN_FAILED_FALLBACK);
+      } else {
+        setApiError(MessageProperties.CONNECTION_FAILED);
+      }
     } finally {
       setLoading(false);
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <div className={styles.wrapper}>
-      <div className={`${styles.card} fade-in pulse`}>
-        <div className={styles.header}>
+      {/* Background Decor Blurs */}
+      <div className={styles.decorLeft}></div>
+      <div className={styles.decorRight}></div>
+
+      <div className={styles.canvas}>
+        {/* Brand Identity Section */}
+        <header className={styles.header}>
+          <div className={styles.brandIconContainer}>
+            <span className={`material-symbols-outlined ${styles.brandIcon}`}>psychology</span>
+          </div>
           <h1 className={styles.logo}>TradeMind AI</h1>
-          <p className={styles.subtitle}>Quản lý cảm xúc, kỷ luật giao dịch chứng khoán</p>
-        </div>
+          <p className={styles.subtitle}>
+            {MessageProperties.LOGIN_SUBTITLE}
+          </p>
+        </header>
 
-        <form onSubmit={handleLogin} noValidate>
-          {apiError && (
-            <div className={styles.errorAlert}>
-              <span className={styles.alertIcon}>⚠️</span>
-              <span className={styles.alertText}>{apiError}</span>
+        {/* Login Form Card */}
+        <section className={styles.glassCard}>
+          <form onSubmit={handleLogin} className={styles.form} noValidate>
+            {apiError && (
+              <div className={styles.errorAlert}>
+                <span className={`material-symbols-outlined ${styles.alertIcon}`}>warning</span>
+                <span className={styles.alertText}>{apiError}</span>
+              </div>
+            )}
+
+            {/* Email Field */}
+            <div className={styles.fieldGroup}>
+              <label className={styles.label} htmlFor="email">
+                {MessageProperties.LOGIN_EMAIL_LABEL}
+              </label>
+              <div className={styles.inputWrapper}>
+                <span className={`material-symbols-outlined ${styles.inputIcon}`}>mail</span>
+                <input
+                  className={`${styles.input} ${emailError ? styles.errorInput : ''}`}
+                  id="email"
+                  type="email"
+                  placeholder={MessageProperties.LOGIN_EMAIL_PLACEHOLDER}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={loading || success}
+                  required
+                />
+              </div>
+              {emailError && <span className={styles.errorText}>{emailError}</span>}
             </div>
-          )}
 
-          {success && (
-            <div className={styles.successAlert}>
-              <span className={styles.alertIcon}>✓</span>
-              <span className={styles.alertText}>Đăng nhập thành công! Đang tải...</span>
+            {/* Password Field */}
+            <div className={styles.fieldGroup}>
+              <div className={styles.labelRow}>
+                <label className={styles.label} htmlFor="password">
+                  {MessageProperties.LOGIN_PASSWORD_LABEL}
+                </label>
+                <a href="#forgot" className={styles.forgotLink}>
+                  {MessageProperties.LOGIN_FORGOT_PASSWORD}
+                </a>
+              </div>
+              <div className={styles.inputWrapper}>
+                <span className={`material-symbols-outlined ${styles.inputIcon}`}>lock</span>
+                <input
+                  className={`${styles.input} ${passwordError ? styles.errorInput : ''}`}
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder={MessageProperties.LOGIN_PASSWORD_PLACEHOLDER}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={loading || success}
+                  required
+                />
+                <button
+                  type="button"
+                  className={styles.eyeButton}
+                  onClick={togglePasswordVisibility}
+                  disabled={loading || success}
+                >
+                  <span className="material-symbols-outlined">
+                    {showPassword ? 'visibility_off' : 'visibility'}
+                  </span>
+                </button>
+              </div>
+              {passwordError && <span className={styles.errorText}>{passwordError}</span>}
             </div>
-          )}
 
-          <Input
-            label="Email đăng nhập"
-            type="email"
-            placeholder="demo@trademind.ai"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            error={emailError}
-            disabled={loading}
-          />
+            {/* Options Checkbox */}
+            <div className={styles.row}>
+              <input
+                className={styles.checkbox}
+                id="remember"
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                disabled={loading || success}
+              />
+              <label className={styles.checkboxLabel} htmlFor="remember">
+                {MessageProperties.LOGIN_REMEMBER_ME}
+              </label>
+            </div>
 
-          <Input
-            label="Mật khẩu"
-            type="password"
-            placeholder="••••••••"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            error={passwordError}
-            disabled={loading}
-          />
+            {/* Action Button with Micro-interactions */}
+            <button
+              className={`${styles.submitBtn} ${success ? styles.btnSuccess : ''}`}
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span className={styles.spinner}></span>
+                  {MessageProperties.LOGIN_BTN_VALIDATING}
+                </>
+              ) : success ? (
+                <>
+                  <span className="material-symbols-outlined">check_circle</span>
+                  {MessageProperties.LOGIN_BTN_SUCCESS}
+                </>
+              ) : (
+                <>
+                  {MessageProperties.LOGIN_BTN_SIGNIN}
+                  <span className="material-symbols-outlined">arrow_forward</span>
+                </>
+              )}
+            </button>
 
-          <div className={styles.actions}>
-            <a href="#forgot" className={styles.forgot}>Quên mật khẩu?</a>
+            {/* Divider */}
+            <div className={styles.divider}>
+              <div className={styles.dividerLine}></div>
+              <span className={styles.dividerText}>{MessageProperties.LOGIN_DIVIDER}</span>
+              <div className={styles.dividerLine}></div>
+            </div>
+
+            {/* Secondary SSO Action */}
+            <button className={styles.ssoBtn} type="button" disabled={loading || success}>
+              <img
+                alt="Google"
+                className={styles.ssoIcon}
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcjShQ0z3oxdaFhceBMEzyA8-Npbshw_SfilGbZG4BoxnwM9KWsf1YBMKR8IHfyEcqfYCDM87vUEHes1j6Ojo0x0i32so6O87uuRT4oNnjWybC4J42zEyjqymBUj2IE6ubj1v1q2hAajOtLd-QOG7hWOTqOx3jNXPnlLw_i_Xd66uoGovSQVdsAtqYVFhFMfqmEQBHsJWKEUzi079QF7JKTmZssgfMMhlPg8j1BgMvIMQHfwm-MEm28andQWLxzcB7IpmTRxx9JnGW"
+              />
+              {MessageProperties.LOGIN_SSO_BTN}
+            </button>
+          </form>
+        </section>
+
+        {/* Footer Link */}
+        <footer className={styles.footer}>
+          {MessageProperties.LOGIN_FOOTER_PROMPT}{' '}
+          <a href="#register" className={styles.footerLink}>
+            {MessageProperties.LOGIN_FOOTER_LINK}
+          </a>
+        </footer>
+      </div>
+
+      {/* Legal Disclaimer Anchor */}
+      <aside className={styles.disclaimerContainer}>
+        <div className={styles.disclaimerContent}>
+          <div className={styles.disclaimerRow}>
+            <span className={`material-symbols-outlined ${styles.disclaimerIcon}`}>warning</span>
+            <div className={styles.disclaimerTextContainer}>
+              <h4 className={styles.disclaimerTitle}>{MessageProperties.LOGIN_DISCLAIMER_TITLE}</h4>
+              <p className={styles.disclaimerText}>
+                {MessageProperties.LOGIN_DISCLAIMER_TEXT}
+              </p>
+            </div>
           </div>
 
-          <Button type="submit" loading={loading}>
-            Đăng nhập hệ thống
-          </Button>
-        </form>
-
-        <div className={styles.footer}>
-          <span>Chưa có tài khoản? </span>
-          <a href="#register">Đăng ký ngay</a>
+          <div className={styles.disclaimerFooter}>
+            <p className={styles.disclaimerCopyright}>
+              {MessageProperties.LOGIN_DISCLAIMER_COPYRIGHT}
+            </p>
+            <div className={styles.disclaimerLinks}>
+              <a className={styles.disclaimerLink} href="#privacy">{MessageProperties.LOGIN_DISCLAIMER_PRIVACY}</a>
+              <a className={styles.disclaimerLink} href="#terms">{MessageProperties.LOGIN_DISCLAIMER_TERMS}</a>
+              <a className={styles.disclaimerLink} href="#compliance">{MessageProperties.LOGIN_DISCLAIMER_COMPLIANCE}</a>
+            </div>
+          </div>
         </div>
-        
-        <div className={styles.disclaimer}>
-          Disclaimer: Sản phẩm chỉ hỗ trợ quản trị cảm xúc & kỷ luật, không phải tư vấn đầu tư.
-        </div>
-      </div>
+      </aside>
     </div>
   );
 };
+
 export default Login;

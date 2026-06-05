@@ -7,18 +7,18 @@ echo       TradeMind AI MVP - KHOI DONG HE THONG DEV
 echo ==========================================================
 echo.
 echo Dang chuan bi khoi chay Backend va Frontend...
-echo Cửa sổ terminal mới sẽ được mở cho từng dịch vụ.
+echo Terminal moi se duoc mo cho tung dich vu.
 echo.
 
 :: Khoi chay Backend FastAPI
-echo [1/2] Dang khoi dong Backend (FastAPI tại port 8000)...
+echo [1/2] Dang khoi dong Backend (FastAPI tai port 8000)...
 start "TradeMind Backend (FastAPI)" cmd /k "cd backend && pip install -r requirements.txt && uvicorn app.main:app --reload --port 8000"
 
 :: Cho 2 giay de Backend on dinh
 timeout /t 2 /nobreak >nul
 
 :: Khoi chay Frontend React/Vite
-echo [2/2] Dang khoi dong Frontend (React/Vite tại port 5173)...
+echo [2/2] Dang khoi dong Frontend (React/Vite tai port 5173)...
 start "TradeMind Frontend (React/Vite)" cmd /k "cd frontend && npm run dev"
 
 echo.

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TradeMind AI - Forgot Password</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid #334155;
+        }
+        .gradient-bg {
+            background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-tint": "#bec6e0",
+                      "primary-container": "#0f172a",
+                      "on-tertiary-container": "#957d5a",
+                      "outline-variant": "#45464d",
+                      "inverse-primary": "#565e74",
+                      "tertiary-container": "#231500",
+                      "outline": "#909097",
+                      "on-primary-container": "#798098",
+                      "on-secondary-fixed-variant": "#005236",
+                      "status-critical": "#991B1B",
+                      "error-container": "#93000a",
+                      "tertiary-fixed-dim": "#dec29a",
+                      "surface": "#131315",
+                      "primary-fixed": "#dae2fd",
+                      "on-error-container": "#ffdad6",
+                      "on-tertiary-fixed": "#271901",
+                      "primary-fixed-dim": "#bec6e0",
+                      "on-tertiary": "#3e2d11",
+                      "on-surface": "#e4e2e4",
+                      "surface-container-lowest": "#0e0e10",
+                      "error": "#ffb4ab",
+                      "on-background": "#e4e2e4",
+                      "inverse-surface": "#e4e2e4",
+                      "action-buy": "#3B82F6",
+                      "primary": "#bec6e0",
+                      "status-caution": "#F59E0B",
+                      "on-secondary": "#003824",
+                      "surface-container": "#1f1f21",
+                      "on-tertiary-fixed-variant": "#574425",
+                      "surface-dim": "#131315",
+                      "surface-container-high": "#2a2a2b",
+                      "secondary-fixed-dim": "#4edea3",
+                      "secondary-fixed": "#6ffbbe",
+                      "secondary": "#4edea3",
+                      "on-primary-fixed": "#131b2e",
+                      "on-secondary-fixed": "#002113",
+                      "inverse-on-surface": "#303032",
+                      "background": "#131315",
+                      "on-error": "#690005",
+                      "tertiary-fixed": "#fcdeb5",
+                      "action-sell": "#F43F5E",
+                      "tertiary": "#dec29a",
+                      "surface-border": "#334155",
+                      "surface-variant": "#353436",
+                      "status-high-risk": "#F43F5E",
+                      "surface-container-highest": "#353436",
+                      "on-primary-fixed-variant": "#3f465c",
+                      "surface-container-low": "#1b1b1d",
+                      "on-primary": "#283044",
+                      "secondary-container": "#00a572",
+                      "surface-card": "#1E293B",
+                      "on-secondary-container": "#00311f",
+                      "on-surface-variant": "#c6c6cd",
+                      "surface-bright": "#39393b",
+                      "status-good": "#10B981"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "margin-mobile": "16px",
+                      "unit": "4px",
+                      "container-max": "1440px",
+                      "margin-desktop": "32px",
+                      "gutter": "16px"
+              },
+              "fontFamily": {
+                      "data-mono": ["JetBrains Mono"],
+                      "headline-lg": ["Inter"],
+                      "legal-sm": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "display-score": ["Inter"],
+                      "body-std": ["Inter"],
+                      "subheading": ["Inter"],
+                      "label-caps": ["Inter"]
+              },
+              "fontSize": {
+                      "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                      "legal-sm": ["11px", {"lineHeight": "14px", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "display-score": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-std": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "subheading": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                      "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-std min-h-screen flex flex-col justify-between overflow-hidden">
+<!-- Subtle Atmospheric Effect -->
+<div class="fixed inset-0 pointer-events-none opacity-20">
+<div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-secondary blur-[120px]"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-action-buy blur-[120px]"></div>
+</div>
+<!-- Main Content Area -->
+<main class="flex-grow flex items-center justify-center p-margin-mobile md:p-margin-desktop z-10">
+<div class="w-full max-w-[420px]">
+<!-- Brand Anchor -->
+<div class="mb-10 text-center">
+<div class="inline-flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-secondary text-[32px]" style="font-variation-settings: 'FILL' 1;">psychology</span>
+<h1 class="text-on-surface font-subheading text-subheading font-black tracking-tight">TradeMind AI</h1>
+</div>
+<p class="text-on-surface-variant font-label-caps text-label-caps uppercase tracking-widest">Discipline Coach</p>
+</div>
+<!-- Forgot Password Card -->
+<div class="glass-panel p-8 rounded-xl shadow-2xl relative overflow-hidden">
+<!-- Card Header -->
+<div class="mb-8">
+<h2 class="text-on-surface font-headline-md text-headline-md mb-2">Recover Account</h2>
+<p class="text-on-surface-variant font-body-std text-body-std leading-relaxed">
+                        Enter your email address and we will send you a link to reset your password.
+                    </p>
+</div>
+<!-- Input Form -->
+<form class="space-y-6" id="reset-form" onsubmit="handleReset(event)">
+<div class="space-y-2">
+<label class="text-on-surface font-label-caps text-label-caps block" for="email">Email Address</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px] transition-colors group-focus-within:text-secondary">mail</span>
+<input class="w-full bg-primary-container border border-surface-border text-on-surface rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-all font-data-mono text-data-mono placeholder:text-outline-variant" id="email" placeholder="name@firm.com" required="" type="email"/>
+</div>
+</div>
+<button class="w-full bg-secondary hover:bg-secondary-container text-on-secondary font-label-caps text-label-caps py-4 rounded-lg flex items-center justify-center gap-2 transition-all active:scale-[0.98] group" type="submit">
+<span>Send Reset Link</span>
+<span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</form>
+<!-- Footer Link -->
+<div class="mt-8 pt-6 border-t border-surface-border/50 text-center">
+<a class="inline-flex items-center gap-2 text-primary font-label-caps text-label-caps hover:text-secondary transition-colors group" href="#">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                        Back to Login
+                    </a>
+</div>
+<!-- Subtle Success Overlay (Hidden by Default) -->
+<div class="absolute inset-0 bg-surface-card flex flex-col items-center justify-center p-8 text-center opacity-0 pointer-events-none transition-opacity duration-300" id="success-overlay">
+<div class="w-16 h-16 bg-status-good/10 rounded-full flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-status-good text-[32px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<h3 class="text-on-surface font-headline-md text-headline-md mb-2">Link Sent</h3>
+<p class="text-on-surface-variant font-body-std text-body-std mb-6">Check your inbox for instructions to reset your secure credentials.</p>
+<button class="text-primary font-label-caps text-label-caps hover:text-secondary border-b border-primary hover:border-secondary" onclick="resetView()">Resend Email</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Global Disclaimer Footer -->
+<footer class="p-margin-desktop bg-surface-container-lowest/50 border-t border-surface-border/30 z-10">
+<div class="max-w-container-max mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+<div class="space-y-4">
+<p class="text-on-surface-variant font-legal-sm text-legal-sm uppercase tracking-widest opacity-60">Mandatory Investment Disclaimer</p>
+<p class="text-on-surface-variant font-legal-sm text-legal-sm leading-relaxed max-w-2xl">
+                        Trading financial instruments involves significant risk and is not suitable for every investor. The valuation of financial instruments may fluctuate, and as a result, clients may lose more than their original investment. The past performance of a security or financial product does not guarantee future results or returns. TradeMind AI provides behavioral analytics and psychological guardrails and does not constitute financial advice, trade recommendations, or portfolio management services. Use of this platform implies acceptance of our terms of service and high-risk disclosure.
+                    </p>
+</div>
+<div class="flex md:justify-end gap-6 self-end">
+<span class="text-on-surface-variant font-legal-sm text-legal-sm">© 2024 TradeMind AI. All Rights Reserved.</span>
+<a class="text-on-surface-variant font-legal-sm text-legal-sm hover:text-primary underline" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant font-legal-sm text-legal-sm hover:text-primary underline" href="#">Compliance Docs</a>
+</div>
+</div>
+</div>
+</footer>
+<script>
+        function handleReset(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const overlay = document.getElementById('success-overlay');
+            
+            // Interaction feedback
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span>';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
+                overlay.classList.add('opacity-100');
+            }, 1200);
+        }
+
+        function resetView() {
+            const overlay = document.getElementById('success-overlay');
+            const form = document.getElementById('reset-form');
+            const btn = form.querySelector('button');
+            
+            overlay.classList.add('opacity-0', 'pointer-events-none');
+            overlay.classList.remove('opacity-100');
+            
+            form.reset();
+            btn.innerHTML = '<span>Send Reset Link</span><span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>';
+            btn.disabled = false;
+        }
+    </script>
+</body></html>

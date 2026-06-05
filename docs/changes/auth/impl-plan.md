@@ -83,12 +83,32 @@ CREATE TABLE users (
 
 ## 5. Các trạng thái giao diện UI cần thiết kế
 
-1.  **Màn hình Register/Login:** 
-    *   Form nhập liệu rõ ràng.
-    *   Hiển thị thông báo validation trực quan khi mật khẩu không đủ mạnh hoặc email bị trùng.
-2.  **Màn hình Đăng ký thành công:** Yêu cầu người dùng kiểm tra hòm thư kích hoạt.
-3.  **Trang Setup Profile / Risk Profile:**
-    *   Hiển thị cảnh báo nếu `account_size` hoặc `default_max_risk_per_trade` chưa được nhập (vì nếu thiếu, các tính năng Pre-trade Check sau này sẽ bị hạn chế tính toán).
+Các màn hình được thiết kế dựa trên phong cách **Dark Mode** hiện đại, kết hợp hiệu ứng kính (**Glassmorphism**) và các tương tác nhỏ (**Micro-interactions**):
+
+1.  **Màn hình Đăng nhập (Login):** 
+    *   **Layout:** Thẻ Glass card bo tròn góc (`glass-card`), bóng đổ rộng, viền mỏng (`border-surface-border`).
+    *   **Fields:** Nhập Email (có icon `mail`), Nhập Password (có icon `lock` và nút ẩn/hiện password `👁`).
+    *   **Tương tác (Micro-interaction):** Khi bấm nút **Sign In**, chuyển nút sang trạng thái loading (`animate-spin` với text "Validating Credentials..."). Nếu đăng nhập thành công, chuyển màu nút sang xanh lá (`bg-status-good`) kèm icon check trước khi chuyển trang.
+    *   **SSO:** Nút phụ hỗ trợ đăng nhập nhanh bằng tài khoản Institutional SSO (Google).
+    *   **Pháp lý:** Bắt buộc hiển thị khung thông tin miễn trừ trách nhiệm đầu tư (**Mandatory Investment Disclaimer**) chi tiết ở phần chân trang.
+
+2.  **Màn hình Đăng ký (Register):** 
+    *   **Layout:** Thẻ Panel kính (`glass-panel`) đồng bộ phong cách tối giản.
+    *   **Fields:** Nhập Họ tên (Full Name - icon `person`), Email (icon `mail`), Mật khẩu (Password - icon `lock`), Xác nhận mật khẩu (Confirm Password - icon `lock_reset`).
+    *   **Đồng ý điều khoản:** Checkbox bắt buộc đồng ý với **Terms of Service** và **Privacy Policy**.
+    *   **Tương tác:** Nút **Create Account** có trạng thái loading xoay vòng tròn khi gửi dữ liệu và hiển thị thành công.
+    *   **Pháp lý:** Khung cảnh báo rủi ro (**Risk Disclosure**) ở cuối trang.
+
+3.  **Màn hình Quên mật khẩu (Forgot Password):**
+    *   **Layout:** Card `Recover Account` đồng bộ giao diện kính.
+    *   **Fields:** Nhập Email (icon `mail`).
+    *   **Tương tác (Success Overlay):** Khi bấm **Send Reset Link**, nếu gửi thành công, một lớp phủ thành công (`success-overlay`) sẽ hiển thị đè lên card ngay tại chỗ (không chuyển trang) thông báo "Link Sent" và cung cấp nút "Resend Email".
+    *   **Footer:** Có link "Back to Login" với icon mũi tên quay lại, cùng khung Disclaimer ở chân trang.
+
+4.  **Màn hình Profile Setup / Risk Profile:**
+    *   Nhập các thông tin tài chính bắt buộc (`account_size` và mức rủi ro mặc định).
+    *   Hiển thị cảnh báo nếu thiếu các trường này vì sẽ làm ảnh hưởng đến tính toán rủi ro lệnh (Pre-trade Check).
+
 
 ---
 

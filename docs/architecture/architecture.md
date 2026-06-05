@@ -61,7 +61,8 @@ trademind-ai/
 │   │   ├── core/             # Cấu hình hệ thống, bảo mật, kết nối DB
 │   │   │   ├── config.py     # Đọc biến môi trường (.env)
 │   │   │   ├── database.py   # Kết nối Neon PostgreSQL via SQLAlchemy
-│   │   │   └── security.py   # Hashing password, JWT token helper
+│   │   │   ├── security.py   # Hashing password, JWT token helper
+│   │   │   └── messages.py   # Quản lý tập trung các thông báo lỗi và thành công
 │   │   │
 │   │   ├── models/           # Khai báo cấu trúc bảng Database (ORM models)
 │   │   │   ├── user.py
@@ -126,8 +127,12 @@ trademind-ai/
 │   │   │   └── api.ts        # Axios client kết nối endpoint Hugging Face
 │   │   │
 │   │   └── styles/           # Styling hệ thống
-│   │       ├── variables.css # Mã màu, HSL colors, CSS variables
-│   │       └── global.css    # Typography, Reset CSS, UTs
+│   │       └── css/          # Thư mục lưu trữ tập trung tất cả các tệp tin .css và .module.css
+│   │           ├── variables.css # Mã màu, HSL colors, CSS variables
+│   │           ├── global.css    # Typography, Reset CSS, UTs
+│   │           ├── App.css       # Style chính của App
+│   │           ├── index.css     # Điểm import các styles toàn cục
+│   │           └── *.module.css  # Các file CSS Module cho các components & pages
 │   │
 │   ├── package.json
 │   ├── tsconfig.json
@@ -271,3 +276,58 @@ class AIService:
             print(f"OpenRouter Connection Exception: {str(e)}")
             return None
 ```
+
+---
+
+## 6. Quy chuẩn viết code Backend & Frontend (Coding Conventions)
+
+### 6.1 Quản lý tập trung thông điệp Backend (Centralized Message Management)
+- **Quy tắc cứng:** Tất cả các câu thông báo văn bản trả về cho Client (bao gồm thông báo lỗi `detail` của `HTTPException` hoặc thông báo thành công `message` của JSON response) **tuyệt đối không được viết chuỗi tĩnh (hardcode string)** trực tiếp trong file router hay các tầng nghiệp vụ logic khác.
+- **Giải pháp:** Tất cả các thông điệp phải được tập trung khai báo dưới dạng hằng số lớp (class constants) trong tệp [messages.py](file:///d:/Traider/backend/app/core/messages.py) thuộc lớp `MessageProperties`. Các Router/Logic sẽ import lớp này để sử dụng nhằm dễ dàng chỉnh sửa, dịch thuật hoặc bảo trì.
+- **Ví dụ mẫu sử dụng:**
+```python
+# Trong file app/core/messages.py
+class MessageProperties:
+    INVALID_CREDENTIALS = "Mật khẩu hoặc email không chính xác"
+
+# Trong file app/api/auth.py
+from app.core.messages import MessageProperties
+
+raise HTTPException(
+    status_code=400,
+    detail=MessageProperties.INVALID_CREDENTIALS
+)
+```
+
+### 6.2 Quản lý bảo mật Token JWT Frontend
+- **Quy tắc:** Mã token xác thực phiên JWT (`access_token`) bắt buộc phải được lưu trữ trong **Cookie** thay vì `localStorage` để tăng tính bảo mật (hạn chế nguy cơ tấn công XSS đánh cắp token).
+- **Giải pháp:** Toàn bộ logic lưu trữ, đọc và xóa Cookie/localStorage được đóng gói tập trung trong [AuthContext.tsx](file:///d:/Traider/frontend/src/context/AuthContext.tsx) và được gọi thông qua hook `useAuth()`. Frontend Client không được can thiệp trực tiếp đến `document.cookie` bên ngoài context này.
+
+### 6.3 Quản lý tập trung nội dung hiển thị ở Frontend (Centralized Frontend Localization)
+- **Quy tắc cứng:** Tất cả các chuỗi văn bản hiển thị trên giao diện người dùng có tiếng Việt (bao gồm nhãn label, placeholder, nút bấm, thông báo, cảnh báo lỗi, mô tả và điều khoản từ chối trách nhiệm pháp lý...) **tuyệt đối không được viết chuỗi tĩnh (hardcode string)** trực tiếp trong mã nguồn các component hay trang giao diện.
+- **Giải pháp:** Toàn bộ các chuỗi nội dung hiển thị này phải được tập trung khai báo làm thuộc tính của đối tượng `MessageProperties` trong tệp [message.ts](file:///d:/Traider/frontend/src/services/message.ts). Các component sẽ import và sử dụng chúng thay cho chuỗi text tĩnh để thuận tiện cho việc chỉnh sửa và mở rộng quốc tế hóa (i18n).
+- **Ví dụ mẫu sử dụng:**
+```typescript
+// Trong file frontend/src/services/message.ts
+export const MessageProperties = {
+  LOGIN_EMAIL_LABEL: "Địa chỉ Email",
+};
+
+// Trong file frontend/src/pages/Login.tsx
+import { MessageProperties } from '../services/message';
+
+// Sử dụng trong JSX:
+<label htmlFor="email">{MessageProperties.LOGIN_EMAIL_LABEL}</label>
+```
+
+### 6.4 Quy chuẩn quản lý tệp tin CSS và CSS Modules (CSS File Management)
+- **Quy tắc cứng:** Tất cả các tệp tin có phần mở rộng `.css` (bao gồm tệp cấu hình biến CSS toàn cục, CSS Reset, và tất cả các tệp CSS Modules có đuôi `.module.css` phục vụ riêng cho các component hoặc trang giao diện) **tuyệt đối không được đặt rải rác** bên cạnh tệp `.tsx` trong thư mục `src/components` hay `src/pages`.
+- **Giải pháp:** Tất cả các tệp tin `.css` và `.module.css` bắt buộc phải được tập trung lưu trữ thống nhất bên trong thư mục [src/styles/css/](file:///d:/Traider/frontend/src/styles/css/). Các file component và page sẽ thực hiện import tương quan (relative import) từ thư mục này để đảm bảo kiến trúc sạch sẽ và dễ quản lý.
+- **Ví dụ mẫu sử dụng:**
+```typescript
+// Trong tệp tin frontend/src/components/Button.tsx
+import styles from '../styles/css/Button.module.css';
+```
+
+
+

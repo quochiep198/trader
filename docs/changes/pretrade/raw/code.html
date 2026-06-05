@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pre-trade Check | TradeMind AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px #bec6e0;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-card": "#1E293B",
+                      "primary-container": "#0f172a",
+                      "on-tertiary-container": "#957d5a",
+                      "status-good": "#10B981",
+                      "on-tertiary-fixed-variant": "#574425",
+                      "error": "#ffb4ab",
+                      "surface-border": "#334155",
+                      "on-secondary": "#003824",
+                      "on-tertiary": "#3e2d11",
+                      "on-background": "#e4e2e4",
+                      "secondary": "#4edea3",
+                      "surface-container-high": "#2a2a2b",
+                      "on-primary-fixed-variant": "#3f465c",
+                      "secondary-fixed": "#6ffbbe",
+                      "primary": "#bec6e0",
+                      "status-high-risk": "#F43F5E",
+                      "background": "#131315",
+                      "on-error-container": "#ffdad6",
+                      "surface-container": "#1f1f21",
+                      "outline": "#909097",
+                      "secondary-fixed-dim": "#4edea3",
+                      "tertiary-fixed": "#fcdeb5",
+                      "on-primary-container": "#798098",
+                      "status-caution": "#F59E0B",
+                      "surface-container-lowest": "#0e0e10",
+                      "tertiary-container": "#231500",
+                      "on-tertiary-fixed": "#271901",
+                      "surface-tint": "#bec6e0",
+                      "inverse-surface": "#e4e2e4",
+                      "inverse-on-surface": "#303032",
+                      "on-primary": "#283044",
+                      "surface-dim": "#131315",
+                      "on-surface": "#e4e2e4",
+                      "error-container": "#93000a",
+                      "surface-bright": "#39393b",
+                      "tertiary": "#dec29a",
+                      "action-buy": "#3B82F6",
+                      "status-critical": "#991B1B",
+                      "primary-fixed-dim": "#bec6e0",
+                      "tertiary-fixed-dim": "#dec29a",
+                      "on-secondary-container": "#00311f",
+                      "inverse-primary": "#565e74",
+                      "surface": "#131315",
+                      "outline-variant": "#45464d",
+                      "primary-fixed": "#dae2fd",
+                      "on-secondary-fixed": "#002113",
+                      "surface-container-highest": "#353436",
+                      "surface-container-low": "#1b1b1d",
+                      "action-sell": "#F43F5E",
+                      "on-primary-fixed": "#131b2e",
+                      "on-surface-variant": "#c6c6cd",
+                      "on-secondary-fixed-variant": "#005236",
+                      "surface-variant": "#353436",
+                      "on-error": "#690005",
+                      "secondary-container": "#00a572"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "margin-desktop": "32px",
+                      "container-max": "1440px",
+                      "margin-mobile": "16px",
+                      "unit": "4px",
+                      "gutter": "16px"
+              },
+              "fontFamily": {
+                      "label-caps": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "data-mono": ["JetBrains Mono"],
+                      "subheading": ["Inter"],
+                      "body-std": ["Inter"],
+                      "display-score": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "legal-sm": ["Inter"]
+              },
+              "fontSize": {
+                      "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                      "subheading": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                      "body-std": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "display-score": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                      "legal-sm": ["11px", {"lineHeight": "14px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-std min-h-screen overflow-x-hidden">
+<!-- Persistent SideNavBar -->
+<aside class="flex flex-col h-screen fixed left-0 top-0 overflow-y-auto bg-primary-container dark:bg-primary-container docked left-0 h-full w-64 border-r border-surface-border flat no shadows z-[60]">
+<div class="p-6">
+<h1 class="text-subheading font-subheading font-bold text-primary dark:text-primary mb-1">TradeMind AI</h1>
+<p class="text-label-caps font-label-caps text-on-primary-container uppercase tracking-widest">Discipline Coach</p>
+</div>
+<nav class="flex-1 mt-4">
+<ul class="space-y-1 px-3">
+<li>
+<a class="flex items-center gap-3 px-3 py-3 rounded text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-card dark:hover:bg-surface-card hover:text-on-surface transition-colors active:scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-label-caps font-label-caps">Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-3 rounded text-secondary dark:text-secondary font-bold hover:bg-surface-card dark:hover:bg-surface-card hover:text-on-surface transition-colors active:scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined">assignment_turned_in</span>
+<span class="text-label-caps font-label-caps">Pre-trade Check</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-3 rounded text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-card dark:hover:bg-surface-card hover:text-on-surface transition-colors active:scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="text-label-caps font-label-caps">Trade Journal</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-3 rounded text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-card dark:hover:bg-surface-card hover:text-on-surface transition-colors active:scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined">gavel</span>
+<span class="text-label-caps font-label-caps">Trading Rules</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-3 rounded text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-card dark:hover:bg-surface-card hover:text-on-surface transition-colors active:scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-label-caps font-label-caps">Settings</span>
+</a>
+</li>
+</ul>
+</nav>
+<div class="p-6 border-t border-surface-border">
+<button class="w-full bg-primary text-on-primary py-3 px-4 font-label-caps text-label-caps rounded hover:opacity-90 transition-all flex items-center justify-center gap-2 mb-6">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                Log New Trade
+            </button>
+<ul class="space-y-1">
+<li>
+<a class="flex items-center gap-3 px-3 py-2 rounded text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="text-label-caps font-label-caps">Support</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-2 rounded text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="text-label-caps font-label-caps">Sign Out</span>
+</a>
+</li>
+</ul>
+</div>
+</aside>
+<!-- Persistent TopNavBar -->
+<header class="flex justify-between items-center w-full px-margin-desktop h-16 sticky top-0 z-50 ml-64 bg-surface dark:bg-surface border-b border-surface-border shadow-sm">
+<div class="flex items-center gap-8">
+<div class="text-subheading font-subheading font-black text-on-surface dark:text-on-surface">TradeMind AI</div>
+<nav class="hidden md:flex gap-6">
+<a class="text-on-surface-variant hover:text-primary transition-all text-label-caps font-label-caps" href="#">Market Data</a>
+<a class="text-on-surface-variant hover:text-primary transition-all text-label-caps font-label-caps" href="#">Performance</a>
+<a class="text-on-surface-variant hover:text-primary transition-all text-label-caps font-label-caps" href="#">Analytics</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative group">
+<span class="absolute inset-y-0 left-3 flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</span>
+<input class="bg-surface-container-low border border-surface-border rounded-full py-1.5 pl-10 pr-4 text-body-std text-sm focus:ring-2 focus:ring-primary w-64 transition-all" placeholder="Search tickers..." type="text"/>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<img alt="User Avatar" class="w-8 h-8 rounded-full border border-surface-border object-cover" data-alt="A professional headshot of a focused male trader in his late 30s, wearing a crisp dark suit and a subtle silver tie. The lighting is dramatic, high-contrast, and cool-toned, reminiscent of a high-end financial office. The background is a slightly blurred trading floor with multiple monitors displaying data charts in deep blue and emerald green hues, creating an atmosphere of expertise and disciplined authority." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxVqYcA0Tc02rSd2-lttXtB2T_yy1DqNIKmC5jaDu4oE-WT08kwGceQz7Km_knQaWliNm5DGW09y9nTZKVzpiBMalCAy9TOmOn7mbniGF-jCZqj7IYEajmOATWk94QZfwoTA9CLbprovZ47E_XrJn4FNMA68it82It21AOIW5pvuj4tON97TSjOWL66RgmNmJYnI6j0158NH6SxGy8gfGsKKIhVdTl4WAPgCbSzkmtrPKJ2Wh9TI4WYohuz6ZnlFUOydz-AzVEoFeH"/>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 p-8 max-w-[1200px] mx-auto">
+<!-- Header Section -->
+<section class="mb-10 flex justify-between items-end">
+<div>
+<h2 class="text-headline-lg font-headline-lg text-primary mb-2">Pre-trade Discipline Check</h2>
+<p class="text-body-std text-on-surface-variant max-w-2xl">This is your behavioral mirror. Before executing, ensure your rationale outweighs your impulse. Total objectivity is the only edge.</p>
+</div>
+<div class="hidden lg:block text-right">
+<div class="text-label-caps font-label-caps text-on-surface-variant mb-1">Session Discipline Score</div>
+<div class="text-display-score font-display-score text-secondary">92</div>
+</div>
+</section>
+<!-- Form Layout (Bento Grid) -->
+<form class="grid grid-cols-12 gap-gutter">
+<!-- Column 1: Core Trade Info -->
+<div class="col-span-12 lg:col-span-7 space-y-gutter">
+<!-- Trade Info Card -->
+<div class="bg-surface-card border border-surface-border p-6 rounded-xl relative overflow-hidden group">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">analytics</span>
+<h3 class="text-headline-md font-headline-md">Trade Configuration</h3>
+</div>
+<div class="grid grid-cols-2 gap-6">
+<div class="col-span-2 md:col-span-1">
+<label class="block text-label-caps font-label-caps text-on-surface-variant mb-2">Ticker Symbol</label>
+<input class="w-full bg-surface-container-lowest border border-surface-border rounded p-3 text-data-mono font-data-mono focus:border-primary transition-colors" placeholder="e.g. AAPL" type="text" value="HPG"/>
+</div>
+<div class="col-span-2 md:col-span-1">
+<label class="block text-label-caps font-label-caps text-on-surface-variant mb-2">Action Type</label>
+<div class="flex bg-surface-container-lowest p-1 border border-surface-border rounded">
+<button class="flex-1 py-2 text-label-caps font-label-caps rounded transition-all bg-action-buy text-white" id="btn-buy" onclick="toggleAction('buy')" type="button">BUY</button>
+<button class="flex-1 py-2 text-label-caps font-label-caps rounded transition-all text-on-surface-variant hover:text-on-surface" id="btn-sell" onclick="toggleAction('sell')" type="button">SELL</button>
+</div>
+</div>
+<div class="col-span-2 md:col-span-1">
+<label class="block text-label-caps font-label-caps text-on-surface-variant mb-2">Entry Price</label>
+<div class="relative">
+<span class="absolute left-3 top-3 text-on-surface-variant">$</span>
+<input class="w-full bg-surface-container-lowest border border-surface-border rounded p-3 pl-8 text-data-mono font-data-mono focus:border-primary transition-colors" placeholder="0.00" step="0.01" type="number"/>
+</div>
+</div>
+<div class="col-span-2 md:col-span-1">
+<label class="block text-label-caps font-label-caps text-on-surface-variant mb-2">Quantity</label>
+<input class="w-full bg-surface-container-lowest border border-surface-border rounded p-3 text-data-mono font-data-mono focus:border-primary transition-colors" placeholder="0" type="number"/>
+</div>
+</div>
+</div>
+<!-- Context Card -->
+<div class="bg-surface-card border border-surface-border p-6 rounded-xl">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">psychology</span>
+<h3 class="text-headline-md font-headline-md">Strategic Rationale</h3>
+</div>
+<div class="space-y-6">
+<div>
+<label class="block text-label-caps font-label-caps text-on-surface-variant mb-2">Primary Reason for Trade</label>
+<textarea class="w-full bg-surface-container-lowest border border-surface-border rounded p-3 text-body-std focus:border-primary transition-colors" placeholder="Describe the setup, timeframe, and catalyst..." rows="4"></textarea>
+</div>
+<div>
+<div class="flex justify-between items-center mb-4">
+<label class="text-label-caps font-label-caps text-on-surface-variant">Conviction Level</label>
+<span class="text-data-mono font-data-mono text-secondary" id="confidence-val">7 / 10</span>
+</div>
+<input class="w-full h-1.5 bg-surface-container-lowest rounded-lg appearance-none cursor-pointer accent-secondary" max="10" min="0" oninput="document.getElementById('confidence-val').innerText = this.value + ' / 10'" type="range" value="7"/>
+<div class="flex justify-between mt-2 text-[10px] text-on-surface-variant font-label-caps">
+<span>SPECULATIVE</span>
+<span>HIGH CERTAINTY</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Column 2: Risk & AI Analysis -->
+<div class="col-span-12 lg:col-span-5 space-y-gutter">
+<!-- Risk Management Card -->
+<div class="bg-surface-card border border-surface-border p-6 rounded-xl border-l-4 border-l-status-high-risk">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-status-high-risk">security</span>
+<h3 class="text-headline-md font-headline-md">Risk Guardrails</h3>
+</div>
+<div class="space-y-6">
+<div class="relative" id="sl-container">
+<label class="block text-label-caps font-label-caps text-on-surface-variant mb-2">Stop-Loss (Hard Exit)</label>
+<input class="w-full bg-surface-container-lowest border border-surface-border rounded p-3 text-data-mono font-data-mono focus:border-status-high-risk transition-colors" id="stop-loss-input" onblur="checkSL()" placeholder="REQUIRED" step="0.01" type="number"/>
+<p class="hidden mt-2 text-status-high-risk text-legal-sm font-label-caps flex items-center gap-1" id="sl-warning">
+<span class="material-symbols-outlined text-[14px]">warning</span> DANGER: Executing without SL is a violation of Rule #1.
+                            </p>
+</div>
+<div>
+<label class="block text-label-caps font-label-caps text-on-surface-variant mb-2">Take-Profit (Target)</label>
+<input class="w-full bg-surface-container-lowest border border-surface-border rounded p-3 text-data-mono font-data-mono focus:border-status-good transition-colors" placeholder="0.00" step="0.01" type="number"/>
+</div>
+<div class="pt-4 border-t border-surface-border flex justify-between items-center">
+<span class="text-label-caps font-label-caps text-on-surface-variant">Risk/Reward Ratio</span>
+<span class="text-data-mono font-data-mono text-status-good">1:2.4</span>
+</div>
+</div>
+</div>
+<!-- Emotion Analysis -->
+<div class="bg-surface-card border border-surface-border p-6 rounded-xl relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-[80px]">neurology</span>
+</div>
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">face</span>
+<h3 class="text-headline-md font-headline-md">Mental State</h3>
+</div>
+<label class="block text-label-caps font-label-caps text-on-surface-variant mb-2">How are you feeling right now?</label>
+<textarea class="w-full bg-surface-container-lowest border border-surface-border rounded p-4 text-body-std italic placeholder:text-on-surface-variant/40 focus:border-primary transition-colors" placeholder="Be honest. Are you chasing? Are you tired? Describe your internal state for the AI discipline engine..." rows="6"></textarea>
+<div class="mt-4 flex flex-wrap gap-2">
+<span class="px-2 py-1 bg-surface-container-low text-legal-sm font-label-caps rounded-full border border-surface-border cursor-pointer hover:bg-surface-container-high transition-colors">Calm</span>
+<span class="px-2 py-1 bg-surface-container-low text-legal-sm font-label-caps rounded-full border border-surface-border cursor-pointer hover:bg-surface-container-high transition-colors">FOMO</span>
+<span class="px-2 py-1 bg-surface-container-low text-legal-sm font-label-caps rounded-full border border-surface-border cursor-pointer hover:bg-surface-container-high transition-colors">Determined</span>
+<span class="px-2 py-1 bg-surface-container-low text-legal-sm font-label-caps rounded-full border border-surface-border cursor-pointer hover:bg-surface-container-high transition-colors">Frustrated</span>
+</div>
+</div>
+</div>
+<!-- Footer / CTA Bar -->
+<div class="col-span-12 mt-4 sticky bottom-8 z-40">
+<div class="glass-panel border border-surface-border rounded-xl p-4 flex flex-col md:flex-row justify-between items-center gap-4 shadow-xl">
+<div class="flex items-center gap-4">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-on-secondary shadow-sm">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary shadow-sm">
+<span class="material-symbols-outlined text-[18px]">auto_awesome</span>
+</div>
+</div>
+<p class="text-body-std text-sm text-on-surface-variant">AI is ready to analyze your behavioral risk profile.</p>
+</div>
+<div class="flex items-center gap-4 w-full md:w-auto">
+<button class="flex-1 md:flex-none px-6 py-3 border border-surface-border text-label-caps font-label-caps rounded-lg hover:bg-surface-container-high transition-colors text-on-surface" type="button">Save as Draft</button>
+<button class="flex-1 md:flex-none px-10 py-3 bg-primary text-on-primary text-label-caps font-label-caps rounded-lg hover:shadow-[0_0_20px_rgba(190,198,224,0.4)] transition-all font-bold" onclick="triggerAnalysis()" type="button">Analyze Trade</button>
+</div>
+</div>
+</div>
+</form>
+<!-- Spacer -->
+<div class="h-20"></div>
+</main>
+<!-- Analysis Overlay (Hidden by default) -->
+<div class="fixed inset-0 z-[100] bg-background/80 backdrop-blur-xl hidden flex items-center justify-center p-6" id="analysis-overlay">
+<div class="max-w-xl w-full bg-surface-card border border-surface-border p-10 rounded-2xl shadow-2xl text-center">
+<div class="mb-8" id="analysis-loader">
+<div class="relative w-24 h-24 mx-auto mb-6">
+<div class="absolute inset-0 border-4 border-primary/20 rounded-full"></div>
+<div class="absolute inset-0 border-4 border-t-secondary rounded-full animate-spin"></div>
+<span class="material-symbols-outlined absolute inset-0 flex items-center justify-center text-[40px] text-primary">monitoring</span>
+</div>
+<h2 class="text-headline-lg font-headline-lg text-on-surface mb-2">Analyzing Psychological Edge...</h2>
+<p class="text-body-std text-on-surface-variant">Deconstructing trade rationale against historic behavioral biases.</p>
+</div>
+<div class="hidden" id="analysis-content">
+<div class="w-20 h-20 bg-status-caution/20 text-status-caution rounded-full mx-auto flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-[40px]">warning</span>
+</div>
+<h2 class="text-headline-lg font-headline-lg text-on-surface mb-4">Soft Cooldown Triggered</h2>
+<div class="bg-surface-container-lowest p-6 rounded-lg text-left mb-8 border border-surface-border">
+<p class="text-body-std mb-4 text-on-surface">"Your description suggests a 'Revenge Trade' pattern. You mentioned a previous loss 14 minutes ago. This trade entry is aggressive."</p>
+<label class="block text-label-caps font-label-caps text-on-tertiary-container mb-2">Mandatory Reflection Question</label>
+<textarea class="w-full bg-surface-card border border-surface-border rounded p-3 text-sm italic" placeholder="Does this trade meet 100% of your pre-defined strategy rules, or is it an emotional reaction?"></textarea>
+</div>
+<div class="flex gap-4">
+<button class="flex-1 py-3 border border-surface-border rounded text-label-caps font-label-caps hover:bg-surface-container-high" onclick="closeAnalysis()">Cancel Trade</button>
+<button class="flex-1 py-3 bg-status-high-risk text-white rounded text-label-caps font-label-caps font-bold">Acknowledge &amp; Proceed</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+        function toggleAction(type) {
+            const btnBuy = document.getElementById('btn-buy');
+            const btnSell = document.getElementById('btn-sell');
+            
+            if (type === 'buy') {
+                btnBuy.className = 'flex-1 py-2 text-label-caps font-label-caps rounded transition-all bg-action-buy text-white';
+                btnSell.className = 'flex-1 py-2 text-label-caps font-label-caps rounded transition-all text-on-surface-variant hover:text-on-surface';
+            } else {
+                btnSell.className = 'flex-1 py-2 text-label-caps font-label-caps rounded transition-all bg-action-sell text-white';
+                btnBuy.className = 'flex-1 py-2 text-label-caps font-label-caps rounded transition-all text-on-surface-variant hover:text-on-surface';
+            }
+        }
+
+        function checkSL() {
+            const slInput = document.getElementById('stop-loss-input');
+            const slWarning = document.getElementById('sl-warning');
+            if (!slInput.value || slInput.value == 0) {
+                slWarning.classList.remove('hidden');
+            } else {
+                slWarning.classList.add('hidden');
+            }
+        }
+
+        function triggerAnalysis() {
+            const overlay = document.getElementById('analysis-overlay');
+            const loader = document.getElementById('analysis-loader');
+            const content = document.getElementById('analysis-content');
+            
+            overlay.classList.remove('hidden');
+            overlay.classList.add('flex');
+            
+            setTimeout(() => {
+                loader.classList.add('hidden');
+                content.classList.remove('hidden');
+            }, 2500);
+        }
+
+        function closeAnalysis() {
+            const overlay = document.getElementById('analysis-overlay');
+            const loader = document.getElementById('analysis-loader');
+            const content = document.getElementById('analysis-content');
+            
+            overlay.classList.add('hidden');
+            overlay.classList.remove('flex');
+            loader.classList.remove('hidden');
+            content.classList.add('hidden');
+        }
+    </script>
+</body></html>

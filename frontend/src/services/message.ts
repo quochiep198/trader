@@ -1,0 +1,92 @@
+export const MessageProperties = {
+  // --- THÔNG BÁO LỖI VALIDATION & CẢNH BÁO ---
+  EMAIL_REQUIRED: "Vui lòng nhập Email",
+  EMAIL_INVALID: "Email không đúng định dạng",
+  PASSWORD_REQUIRED: "Vui lòng nhập mật khẩu",
+  PASSWORD_MIN_LENGTH: "Mật khẩu tối thiểu phải từ 8 ký tự",
+  FULLNAME_REQUIRED: "Vui lòng nhập họ tên",
+  PASSWORD_MISMATCH: "Mật khẩu xác nhận không khớp",
+  TERMS_REQUIRED: "Bạn phải đồng ý với điều khoản dịch vụ để tiếp tục",
+
+  // --- THÀNH PHẦN CHÍNH SÁCH MẬT KHẨU (PASSWORD POLICY) ---
+  PASSWORD_POLICY_MIN_LENGTH: "tối thiểu 8 ký tự",
+  PASSWORD_POLICY_UPPERCASE: "chứa chữ hoa",
+  PASSWORD_POLICY_LOWERCASE: "chứa chữ thường",
+  PASSWORD_POLICY_NUMBER: "chứa chữ số",
+  PASSWORD_POLICY_PREFIX: "Mật khẩu chưa đạt: ",
+
+  // --- THÔNG BÁO KẾT NỐI API & PHẢN HỒI ---
+  CONNECTION_FAILED: "Không thể kết nối tới máy chủ. Vui lòng kiểm tra lại backend.",
+  LOGIN_FAILED_FALLBACK: "Mật khẩu hoặc email không chính xác",
+  REGISTER_FAILED_FALLBACK: "Đăng ký thất bại. Vui lòng thử lại.",
+  REGISTER_SUCCESS_FALLBACK: "Đăng ký tài khoản thành công!",
+
+  // --- MÀN HÌNH ĐĂNG NHẬP (LOGIN PAGE) ---
+  LOGIN_SUBTITLE: "Làm chủ kỷ luật giao dịch với sự trợ giúp từ huấn luyện viên AI.",
+  LOGIN_EMAIL_LABEL: "Địa chỉ Email",
+  LOGIN_EMAIL_PLACEHOLDER: "trader@firm.com",
+  LOGIN_PASSWORD_LABEL: "Mật khẩu",
+  LOGIN_FORGOT_PASSWORD: "Quên mật khẩu?",
+  LOGIN_PASSWORD_PLACEHOLDER: "••••••••",
+  LOGIN_REMEMBER_ME: "Ghi nhớ đăng nhập trong 30 ngày",
+  LOGIN_BTN_SIGNIN: "Đăng Nhập",
+  LOGIN_BTN_VALIDATING: "Đang xác thực thông tin...",
+  LOGIN_BTN_SUCCESS: "Đăng nhập thành công",
+  LOGIN_DIVIDER: "HOẶC",
+  LOGIN_SSO_BTN: "Đăng nhập bằng SSO của tổ chức",
+  LOGIN_FOOTER_PROMPT: "Mới sử dụng TradeMind?",
+  LOGIN_FOOTER_LINK: "Tạo tài khoản mới",
+  LOGIN_DISCLAIMER_TITLE: "Tuyên bố miễn trừ trách nhiệm đầu tư bắt buộc",
+  LOGIN_DISCLAIMER_TEXT: "Giao dịch các công cụ tài chính tiềm ẩn rủi ro lớn và không phù hợp với tất cả các nhà đầu tư. Việc sử dụng đòn bẩy có thể dẫn đến thua lỗ vượt quá số tiền gửi ban đầu. Hiệu suất trong quá khứ không phải là chỉ báo cho kết quả tương lai. TradeMind AI cung cấp các công cụ phân tích hành vi và huấn luyện tâm lý cho mục đích giáo dục. Các phân tích từ AI của chúng tôi không cấu thành lời khuyên tài chính, đầu tư, thuế hoặc pháp lý. Mọi giao dịch bạn thực hiện là trách nhiệm duy nhất của bạn. TradeMind AI và các bên liên kết không chịu trách nhiệm cho bất kỳ tổn thất tài chính nào phát sinh từ hoạt động giao dịch của bạn.",
+  LOGIN_DISCLAIMER_COPYRIGHT: "© 2024 TradeMind AI. Được cấp phép sử dụng cho tổ chức chuyên nghiệp.",
+  LOGIN_DISCLAIMER_PRIVACY: "Chính sách bảo mật",
+  LOGIN_DISCLAIMER_TERMS: "Điều khoản dịch vụ",
+  LOGIN_DISCLAIMER_COMPLIANCE: "Thiết lập tuân thủ",
+
+  // --- MÀN HÌNH ĐĂNG KÝ (REGISTER PAGE) ---
+  REGISTER_SUBTITLE: "Làm chủ tâm lý để giao dịch thị trường chính xác.",
+  REGISTER_TITLE: "Tạo tài khoản",
+  REGISTER_CARD_SUBTITLE: "Bắt đầu hành trình hướng tới giao dịch có kỷ luật.",
+  REGISTER_FULLNAME_LABEL: "Họ và tên",
+  REGISTER_FULLNAME_PLACEHOLDER: "Nhập họ và tên của bạn",
+  REGISTER_EMAIL_LABEL: "Địa chỉ Email",
+  REGISTER_EMAIL_PLACEHOLDER: "email@example.com",
+  REGISTER_PASSWORD_LABEL: "Mật khẩu",
+  REGISTER_CONFIRM_PASSWORD_LABEL: "Xác nhận mật khẩu",
+  REGISTER_AGREE_TERMS_1: "Tôi đồng ý với ",
+  REGISTER_AGREE_TERMS_2: " và ",
+  REGISTER_AGREE_TERMS_3: ". Tôi hiểu TradeMind AI là công cụ theo dõi kỷ luật, không phải cố vấn tài chính.",
+  REGISTER_BTN_CREATE: "Tạo tài khoản",
+  REGISTER_BTN_LOADING: "Đang đăng ký...",
+  REGISTER_FOOTER_PROMPT: "Đã có tài khoản?",
+  REGISTER_FOOTER_LINK: "Đăng nhập",
+  REGISTER_ILLUST_MIRROR: "Gương soi hiệu suất",
+  REGISTER_ILLUST_AI: "AI phân tích hành vi",
+  REGISTER_ILLUST_SECURITY: "Chủ quyền dữ liệu",
+  REGISTER_DISCLAIMER_TITLE: "Công báo rủi ro & Miễn trừ trách nhiệm đầu tư",
+  REGISTER_DISCLAIMER_TEXT: "Giao dịch các công cụ tài chính đi kèm rủi ro thua lỗ đáng kể và không phù hợp với mọi nhà đầu tư. Giá trị của các công cụ tài chính có thể biến động và khách hàng có thể mất nhiều hơn số vốn đầu tư ban đầu. TradeMind AI là ứng dụng phân tích tâm lý và theo dõi kỷ luật. Ứng dụng không cung cấp dịch vụ tư vấn tài chính, tín hiệu giao dịch hay môi giới. Hiệu suất trong quá khứ không quyết định kết quả tương lai. Luôn tham khảo ý kiến của chuyên gia tài chính trước khi đưa ra quyết định đầu tư.",
+  REGISTER_DISCLAIMER_COPYRIGHT: "© 2024 TradeMind AI Systems. Bảo lưu mọi quyền.",
+
+  // --- MÀN HÌNH QUẢN LÝ LUẬT (TRADING RULES PAGE) ---
+  RULES_PAGE_TITLE: "Quy tắc giao dịch",
+  RULES_BANNER_WARNING: "Quy tắc giao dịch chỉ phục vụ mục đích kiểm soát kỷ luật cá nhân, không cấu thành tín hiệu/khuyến nghị mua bán chứng khoán.",
+  RULES_BENTO_FRAMEWORK_TITLE: "Hệ thống kỷ luật",
+  RULES_BENTO_FRAMEWORK_DESC: "Các quy tắc này đóng vai trò là ranh giới hành vi của bạn, đảm bảo rằng biến động cảm xúc không ảnh hưởng đến kỷ luật giao dịch hệ thống.",
+  RULES_BENTO_ADHERENCE_SCORE: "Điểm tuân thủ tuần trước",
+  RULES_BENTO_CONSISTENCY: "Nhất quán cao",
+  RULES_BTN_DISCARD: "Hủy thay đổi",
+  RULES_BTN_SAVE: "Lưu thiết lập kỷ luật",
+  RULES_TOAST_SUCCESS: "Đồng bộ hóa thành công",
+  RULES_TOAST_SUCCESS_DESC: "Khung kỷ luật giao dịch của bạn hiện đã được kích hoạt.",
+  RULES_EDIT_MODAL_TITLE: "Chỉnh sửa quy tắc",
+  RULES_EDIT_MODAL_INPUT_LABEL: "Nhập giá trị mới cho",
+  RULES_EDIT_MODAL_SAVE: "Xác nhận",
+  RULES_EDIT_MODAL_CANCEL: "Hủy bỏ",
+
+  // --- THANH TRẠNG THÁI DƯỚI (BOTTOMBAR) ---
+  BOTTOMBAR_COPYRIGHT: "© 2026 TradeMind AI Systems. Bảo lưu mọi quyền.",
+  BOTTOMBAR_API_STATUS: "Hệ thống: Trực tuyến",
+  BOTTOMBAR_LICENSE: "Được cấp phép sử dụng chuyên nghiệp",
+  BOTTOMBAR_DISCLAIMER: "Công báo rủi ro"
+};
+

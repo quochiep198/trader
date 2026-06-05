@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sign Up | TradeMind AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+        }
+        .input-inset {
+            background: #131315;
+            border: 1px solid #334155;
+            transition: all 0.2s ease-in-out;
+        }
+        .input-inset:focus-within {
+            border-color: #bec6e0;
+            box-shadow: 0 0 0 2px rgba(190, 198, 224, 0.2);
+        }
+        body {
+            background-color: #0f172a;
+            color: #e4e2e4;
+            overflow-x: hidden;
+        }
+        .bg-mesh {
+            background-image: radial-gradient(at 0% 0%, rgba(15, 23, 42, 1) 0, transparent 50%),
+                              radial-gradient(at 100% 0%, rgba(30, 41, 59, 1) 0, transparent 50%),
+                              radial-gradient(at 100% 100%, rgba(15, 23, 42, 1) 0, transparent 50%),
+                              radial-gradient(at 0% 100%, rgba(30, 41, 59, 1) 0, transparent 50%);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#bec6e0",
+                        "primary-container": "#0f172a",
+                        "on-tertiary-container": "#957d5a",
+                        "outline-variant": "#45464d",
+                        "inverse-primary": "#565e74",
+                        "tertiary-container": "#231500",
+                        "outline": "#909097",
+                        "on-primary-container": "#798098",
+                        "on-secondary-fixed-variant": "#005236",
+                        "status-critical": "#991B1B",
+                        "error-container": "#93000a",
+                        "tertiary-fixed-dim": "#dec29a",
+                        "surface": "#131315",
+                        "primary-fixed": "#dae2fd",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-fixed": "#271901",
+                        "primary-fixed-dim": "#bec6e0",
+                        "on-tertiary": "#3e2d11",
+                        "on-surface": "#e4e2e4",
+                        "surface-container-lowest": "#0e0e10",
+                        "error": "#ffb4ab",
+                        "on-background": "#e4e2e4",
+                        "inverse-surface": "#e4e2e4",
+                        "action-buy": "#3B82F6",
+                        "primary": "#bec6e0",
+                        "status-caution": "#F59E0B",
+                        "on-secondary": "#003824",
+                        "surface-container": "#1f1f21",
+                        "on-tertiary-fixed-variant": "#574425",
+                        "surface-dim": "#131315",
+                        "surface-container-high": "#2a2a2b",
+                        "secondary-fixed-dim": "#4edea3",
+                        "secondary-fixed": "#6ffbbe",
+                        "secondary": "#4edea3",
+                        "on-primary-fixed": "#131b2e",
+                        "on-secondary-fixed": "#002113",
+                        "inverse-on-surface": "#303032",
+                        "background": "#131315",
+                        "on-error": "#690005",
+                        "tertiary-fixed": "#fcdeb5",
+                        "action-sell": "#F43F5E",
+                        "tertiary": "#dec29a",
+                        "surface-border": "#334155",
+                        "surface-variant": "#353436",
+                        "status-high-risk": "#F43F5E",
+                        "surface-container-highest": "#353436",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "surface-container-low": "#1b1b1d",
+                        "on-primary": "#283044",
+                        "secondary-container": "#00a572",
+                        "surface-card": "#1E293B",
+                        "on-secondary-container": "#00311f",
+                        "on-surface-variant": "#c6c6cd",
+                        "surface-bright": "#39393b",
+                        "status-good": "#10B981"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "unit": "4px",
+                        "container-max": "1440px",
+                        "margin-desktop": "32px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "data-mono": ["JetBrains Mono"],
+                        "headline-lg": ["Inter"],
+                        "legal-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "display-score": ["Inter"],
+                        "body-std": ["Inter"],
+                        "subheading": ["Inter"],
+                        "label-caps": ["Inter"]
+                    },
+                    "fontSize": {
+                        "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                        "legal-sm": ["11px", {"lineHeight": "14px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "display-score": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-std": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "subheading": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-mesh min-h-screen flex flex-col items-center justify-center p-margin-mobile md:p-margin-desktop">
+<!-- Brand Header -->
+<header class="mb-8 text-center animate-in fade-in slide-in-from-top-4 duration-700">
+<h1 class="font-subheading text-headline-md font-black text-on-surface tracking-tight">TradeMind AI</h1>
+<p class="font-body-std text-on-surface-variant opacity-80 mt-1">Mastering psychology for market precision.</p>
+</header>
+<main class="w-full max-w-[480px] z-10">
+<div class="glass-panel p-8 rounded-xl shadow-2xl relative overflow-hidden">
+<!-- Decorative accent line -->
+<div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-2">Create Account</h2>
+<p class="font-body-std text-on-surface-variant mb-8">Begin your journey toward disciplined trading.</p>
+<form class="space-y-6" id="signup-form">
+<!-- Full Name -->
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant block" for="fullname">Full Name</label>
+<div class="input-inset flex items-center px-4 py-3 rounded-lg">
+<span class="material-symbols-outlined text-on-primary-container mr-3 text-[20px]" data-icon="person">person</span>
+<input class="bg-transparent border-none focus:ring-0 text-on-surface font-body-std w-full placeholder:text-outline-variant" id="fullname" name="fullname" placeholder="Enter your full name" required="" type="text"/>
+</div>
+</div>
+<!-- Email -->
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant block" for="email">Email Address</label>
+<div class="input-inset flex items-center px-4 py-3 rounded-lg">
+<span class="material-symbols-outlined text-on-primary-container mr-3 text-[20px]" data-icon="mail">mail</span>
+<input class="bg-transparent border-none focus:ring-0 text-on-surface font-body-std w-full placeholder:text-outline-variant" id="email" name="email" placeholder="email@example.com" required="" type="email"/>
+</div>
+</div>
+<!-- Password Row -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant block" for="password">Password</label>
+<div class="input-inset flex items-center px-4 py-3 rounded-lg">
+<span class="material-symbols-outlined text-on-primary-container mr-3 text-[20px]" data-icon="lock">lock</span>
+<input class="bg-transparent border-none focus:ring-0 text-on-surface font-body-std w-full placeholder:text-outline-variant" id="password" name="password" placeholder="••••••••" required="" type="password"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant block" for="confirm_password">Confirm Password</label>
+<div class="input-inset flex items-center px-4 py-3 rounded-lg">
+<span class="material-symbols-outlined text-on-primary-container mr-3 text-[20px]" data-icon="lock_reset">lock_reset</span>
+<input class="bg-transparent border-none focus:ring-0 text-on-surface font-body-std w-full placeholder:text-outline-variant" id="confirm_password" name="confirm_password" placeholder="••••••••" required="" type="password"/>
+</div>
+</div>
+</div>
+<!-- Agreement -->
+<div class="flex items-start gap-3 py-2">
+<div class="flex items-center h-5">
+<input class="h-4 w-4 rounded border-surface-border bg-surface-container-lowest text-primary focus:ring-primary focus:ring-offset-background" id="terms" name="terms" required="" type="checkbox"/>
+</div>
+<label class="font-legal-sm text-legal-sm text-on-surface-variant" for="terms">
+                        I agree to the <a class="text-primary hover:underline transition-all" href="#">Terms of Service</a> and <a class="text-primary hover:underline transition-all" href="#">Privacy Policy</a>. I understand TradeMind AI is a tool for discipline tracking and not a financial advisor.
+                    </label>
+</div>
+<!-- CTA -->
+<button class="w-full bg-primary text-on-primary font-subheading text-subheading py-4 rounded-lg shadow-lg hover:shadow-primary/20 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 group" type="submit">
+<span>Create Account</span>
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</form>
+<div class="mt-8 pt-6 border-t border-surface-border text-center">
+<p class="font-body-std text-on-surface-variant">
+                    Already have an account? 
+                    <a class="text-primary font-bold hover:text-primary-fixed-dim transition-colors ml-1" href="#">Log in</a>
+</p>
+</div>
+</div>
+</main>
+<!-- Side Content / Brand Illustration Placeholder -->
+<div class="mt-12 max-w-2xl text-center hidden md:block">
+<div class="grid grid-cols-3 gap-6">
+<div class="p-4 rounded-lg bg-surface-container/50 border border-surface-border">
+<span class="material-symbols-outlined text-secondary mb-2" data-icon="monitoring">monitoring</span>
+<p class="font-label-caps text-on-surface-variant">Performance Mirror</p>
+</div>
+<div class="p-4 rounded-lg bg-surface-container/50 border border-surface-border">
+<span class="material-symbols-outlined text-secondary mb-2" data-icon="psychology">psychology</span>
+<p class="font-label-caps text-on-surface-variant">Behavioral AI</p>
+</div>
+<div class="p-4 rounded-lg bg-surface-container/50 border border-surface-border">
+<span class="material-symbols-outlined text-secondary mb-2" data-icon="security">security</span>
+<p class="font-label-caps text-on-surface-variant">Data Sovereignty</p>
+</div>
+</div>
+</div>
+<!-- Mandatory Disclaimer -->
+<footer class="mt-16 max-w-3xl px-margin-mobile text-center">
+<div class="p-6 border border-surface-border/30 rounded-lg bg-primary-container/20">
+<h3 class="font-label-caps text-label-caps text-status-caution mb-2 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[16px]" data-icon="warning">warning</span>
+                Risk Disclosure &amp; Investment Disclaimer
+            </h3>
+<p class="font-legal-sm text-legal-sm text-on-primary-container leading-relaxed">
+                Trading financial instruments involves substantial risk of loss and is not suitable for every investor. The valuation of financial instruments may fluctuate, and as a result, clients may lose more than their original investment. TradeMind AI is a psychological analysis and discipline-tracking application. It does not provide financial advice, signal-based trading, or brokerage services. Past performance is not indicative of future results. Always consult with a certified financial planner before making investment decisions.
+            </p>
+</div>
+<p class="font-legal-sm text-legal-sm text-outline mt-6 opacity-50">© 2024 TradeMind AI Systems. All rights reserved.</p>
+</footer>
+<!-- Background Decoration -->
+<div class="fixed top-[-10%] right-[-5%] w-[400px] h-[400px] bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
+<div class="fixed bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-secondary/5 rounded-full blur-[100px] pointer-events-none"></div>
+<script>
+        // Micro-interactions for form submission
+        document.getElementById('signup-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button[type="submit"]');
+            const originalContent = btn.innerHTML;
+            
+            // Loading State
+            btn.disabled = true;
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin" data-icon="progress_activity">progress_activity</span>';
+            
+            // Simulate API call
+            setTimeout(() => {
+                btn.classList.replace('bg-primary', 'bg-status-good');
+                btn.innerHTML = '<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>';
+                
+                setTimeout(() => {
+                    alert('Registration Successful. Welcome to TradeMind AI.');
+                    btn.disabled = false;
+                    btn.innerHTML = originalContent;
+                    btn.classList.replace('bg-status-good', 'bg-primary');
+                }, 1000);
+            }, 1500);
+        });
+
+        // Focus ring visual persistence logic
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.classList.add('border-primary');
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.classList.remove('border-primary');
+            });
+        });
+    </script>
+</body></html>

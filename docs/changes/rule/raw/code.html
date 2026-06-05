@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TradeMind AI - Personal Trading Rules</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-card": "#1E293B",
+                        "primary-container": "#0f172a",
+                        "on-tertiary-container": "#957d5a",
+                        "status-good": "#10B981",
+                        "on-tertiary-fixed-variant": "#574425",
+                        "error": "#ffb4ab",
+                        "surface-border": "#334155",
+                        "on-secondary": "#003824",
+                        "on-tertiary": "#3e2d11",
+                        "on-background": "#e4e2e4",
+                        "secondary": "#4edea3",
+                        "surface-container-high": "#2a2a2b",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "secondary-fixed": "#6ffbbe",
+                        "primary": "#bec6e0",
+                        "status-high-risk": "#F43F5E",
+                        "background": "#131315",
+                        "on-error-container": "#ffdad6",
+                        "surface-container": "#1f1f21",
+                        "outline": "#909097",
+                        "secondary-fixed-dim": "#4edea3",
+                        "tertiary-fixed": "#fcdeb5",
+                        "on-primary-container": "#798098",
+                        "status-caution": "#F59E0B",
+                        "surface-container-lowest": "#0e0e10",
+                        "tertiary-container": "#231500",
+                        "on-tertiary-fixed": "#271901",
+                        "surface-tint": "#bec6e0",
+                        "inverse-surface": "#e4e2e4",
+                        "inverse-on-surface": "#303032",
+                        "on-primary": "#283044",
+                        "surface-dim": "#131315",
+                        "on-surface": "#e4e2e4",
+                        "error-container": "#93000a",
+                        "surface-bright": "#39393b",
+                        "tertiary": "#dec29a",
+                        "action-buy": "#3B82F6",
+                        "status-critical": "#991B1B",
+                        "primary-fixed-dim": "#bec6e0",
+                        "tertiary-fixed-dim": "#dec29a",
+                        "on-secondary-container": "#00311f",
+                        "inverse-primary": "#565e74",
+                        "surface": "#131315",
+                        "outline-variant": "#45464d",
+                        "primary-fixed": "#dae2fd",
+                        "on-secondary-fixed": "#002113",
+                        "surface-container-highest": "#353436",
+                        "surface-container-low": "#1b1b1d",
+                        "action-sell": "#F43F5E",
+                        "on-primary-fixed": "#131b2e",
+                        "on-surface-variant": "#c6c6cd",
+                        "on-secondary-fixed-variant": "#005236",
+                        "surface-variant": "#353436",
+                        "on-error": "#690005",
+                        "secondary-container": "#00a572"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "32px",
+                        "container-max": "1440px",
+                        "margin-mobile": "16px",
+                        "unit": "4px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "subheading": ["Inter"],
+                        "body-std": ["Inter"],
+                        "display-score": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "legal-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "subheading": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "body-std": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "display-score": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                        "legal-sm": ["11px", {"lineHeight": "14px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-std selection:bg-secondary selection:text-on-secondary">
+<!-- Sidebar Navigation Shell -->
+<aside class="flex flex-col h-screen fixed left-0 top-0 overflow-y-auto bg-primary-container dark:bg-primary-container docked left-0 h-full w-64 border-r border-surface-border">
+<div class="p-6">
+<h1 class="text-subheading font-subheading font-bold text-primary dark:text-primary">TradeMind AI</h1>
+<p class="text-label-caps font-label-caps text-on-primary-container mt-1">Discipline Coach</p>
+</div>
+<nav class="flex-1 px-4 py-2 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-card dark:hover:bg-surface-card hover:text-on-surface transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-label-caps font-label-caps">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-card dark:hover:bg-surface-card hover:text-on-surface transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">assignment_turned_in</span>
+<span class="text-label-caps font-label-caps">Pre-trade Check</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-card dark:hover:bg-surface-card hover:text-on-surface transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="text-label-caps font-label-caps">Trade Journal</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary dark:text-secondary font-bold bg-surface-card/30 rounded-lg scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined">gavel</span>
+<span class="text-label-caps font-label-caps">Trading Rules</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-card dark:hover:bg-surface-card hover:text-on-surface transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-label-caps font-label-caps">Settings</span>
+</a>
+</nav>
+<div class="px-6 py-6 border-t border-surface-border">
+<button class="w-full bg-secondary text-on-secondary px-4 py-3 rounded-lg font-label-caps flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined">add</span>
+                Log New Trade
+            </button>
+</div>
+<div class="px-4 py-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="text-label-caps font-label-caps">Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="text-label-caps font-label-caps">Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen">
+<!-- Top Navigation Shell -->
+<header class="flex justify-between items-center w-full px-margin-desktop h-16 sticky top-0 z-50 bg-surface dark:bg-surface border-b border-surface-border shadow-sm">
+<div class="flex items-center gap-8">
+<h2 class="text-subheading font-subheading font-black text-on-surface dark:text-on-surface">Trading Rules</h2>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-on-surface-variant hover:text-primary transition-all text-label-caps font-label-caps" href="#">Market Data</a>
+<a class="text-on-surface-variant hover:text-primary transition-all text-label-caps font-label-caps" href="#">Performance</a>
+<a class="text-on-surface-variant hover:text-primary transition-all text-label-caps font-label-caps" href="#">Analytics</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="bg-surface-container-low border border-surface-border rounded-full pl-10 pr-4 py-1.5 text-body-std focus:ring-2 focus:ring-primary focus:outline-none w-64" placeholder="Search parameters..." type="text"/>
+</div>
+<button class="text-on-surface-variant hover:text-primary p-2 transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<img alt="User Avatar" class="w-8 h-8 rounded-full border border-surface-border" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhu903kYJb2gbfzgZkPV06ZLb2lonZhRxUo4awHryBcvK-A2lfaOrBQCOqsvpc5T04bhxf60yKfjwFxtkGXs9wLsYUa8w9qgKH07mvXA4qJU1r7Gdvb6-b3GxWCWwaeXWCWls_T7O-0DO9tq3eYWWPgjEEQaw54d8VM94fiXmrlcn3wxPXdbk5kyJVCeyJ_OP5VyGE9VJcyMXv-f9cd2GMKvAZL9MFfbg4Wyzhg-CFIwaujHkQUss5iA0fMDD81OLCxAoh0cfjpOJY"/>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="p-margin-desktop max-w-container-max mx-auto">
+<!-- Warning Banner -->
+<div class="mb-8 flex items-center gap-4 p-4 rounded-xl bg-status-caution/10 border border-status-caution/20 animate-pulse">
+<span class="material-symbols-outlined text-status-caution">warning</span>
+<p class="text-body-std font-medium text-status-caution">Rules are for discipline coaching, not buy/sell signals.</p>
+</div>
+<!-- Bento Grid Layout for Rules -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Discipline Header Card -->
+<div class="col-span-12 lg:col-span-4 glass-panel rounded-xl p-8 flex flex-col justify-between relative overflow-hidden group">
+<div class="relative z-10">
+<h3 class="text-headline-md font-headline-md text-primary mb-2">Discipline Framework</h3>
+<p class="text-body-std text-on-surface-variant opacity-80 mb-6">These rules act as your behavioral guardrails, ensuring that emotional volatility doesn't override your systematic edge.</p>
+<div class="flex items-center gap-4">
+<div class="h-16 w-16 rounded-full border-2 border-secondary flex items-center justify-center">
+<span class="text-display-score font-display-score text-secondary text-2xl">88</span>
+</div>
+<div>
+<p class="text-label-caps font-label-caps text-on-surface-variant">Last Week's Adherence</p>
+<p class="text-subheading font-subheading text-secondary">Strong Consistency</p>
+</div>
+</div>
+</div>
+<img alt="" class="absolute -right-8 -bottom-8 opacity-10 w-48 rotate-12 transition-transform group-hover:rotate-0 duration-700" data-alt="A highly detailed 3D abstract digital background with glowing emerald green grid lines and topographical contours on a deep navy surface. The aesthetic is futuristic and high-tech, evoking the feeling of a sophisticated financial terminal or an AI-driven trading engine. The lighting is low-key with intense neon accents, creating a professional and focused atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAG5GGlF1HXJToCRdLXzXNKFdvrRSAIjZrCftJcrTnAuOEkkUOSJGlriC5T4ogbgXwpgdPz92jpOzkRsYP3KBs0lFq_5PUaNh6kns-kIIZBNtAqv6Yi7-_14QuHEe1sJttz-tSl4Nb7KXxoGB3VcnKuH61EvqrNNltBMSIFXy-2QnKnWaj0K3cmOe1Rg4tUqu9eOfLTaj5cl1OKr1KPQbUsytFAIWP1tU_cdmmwIpDNFKzcAIia3lUTNpyWKY7iowCKnBs8BKiZQfBo"/>
+</div>
+<!-- Rules List -->
+<div class="col-span-12 lg:col-span-8 flex flex-col gap-4">
+<!-- Rule Item: Stop-Loss -->
+<div class="bg-surface-card border border-surface-border rounded-xl p-5 flex items-center justify-between hover:border-primary/30 transition-all group">
+<div class="flex gap-5 items-start">
+<div class="w-10 h-10 rounded-lg bg-status-good/10 flex items-center justify-center text-status-good">
+<span class="material-symbols-outlined">security</span>
+</div>
+<div>
+<h4 class="text-subheading font-subheading text-on-surface">Require Stop-loss</h4>
+<p class="text-body-std text-on-surface-variant text-sm mt-1 max-w-md">Mandates an exit price for every position. Prevents catastrophic drawdown by capping individual trade risk.</p>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+</div>
+<!-- Rule Item: Max Risk -->
+<div class="bg-surface-card border border-surface-border rounded-xl p-5 flex items-center justify-between hover:border-primary/30 transition-all group">
+<div class="flex gap-5 items-start">
+<div class="w-10 h-10 rounded-lg bg-action-buy/10 flex items-center justify-center text-action-buy">
+<span class="material-symbols-outlined">percent</span>
+</div>
+<div>
+<div class="flex items-center gap-3">
+<h4 class="text-subheading font-subheading text-on-surface">Max Risk per Trade</h4>
+<span class="bg-surface-container-high px-2 py-0.5 rounded text-data-mono font-data-mono text-secondary">2%</span>
+</div>
+<p class="text-body-std text-on-surface-variant text-sm mt-1 max-w-md">Ensures survivability by strictly limiting the capital allocated to any single trade outcome.</p>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+</div>
+<!-- Rule Item: Max Consecutive Losses -->
+<div class="bg-surface-card border border-surface-border rounded-xl p-5 flex items-center justify-between hover:border-primary/30 transition-all group">
+<div class="flex gap-5 items-start">
+<div class="w-10 h-10 rounded-lg bg-status-high-risk/10 flex items-center justify-center text-status-high-risk">
+<span class="material-symbols-outlined">history</span>
+</div>
+<div>
+<div class="flex items-center gap-3">
+<h4 class="text-subheading font-subheading text-on-surface">Max Consecutive Losses</h4>
+<span class="bg-surface-container-high px-2 py-0.5 rounded text-data-mono font-data-mono text-secondary">3</span>
+</div>
+<p class="text-body-std text-on-surface-variant text-sm mt-1 max-w-md">Triggers a 'Cool Down' phase to prevent revenge trading and emotional spiral after a losing streak.</p>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+</div>
+<!-- Rule Item: FOMO Score -->
+<div class="bg-surface-card border border-surface-border rounded-xl p-5 flex items-center justify-between hover:border-primary/30 transition-all group">
+<div class="flex gap-5 items-start">
+<div class="w-10 h-10 rounded-lg bg-on-tertiary-container/10 flex items-center justify-center text-on-tertiary-container">
+<span class="material-symbols-outlined">psychology</span>
+</div>
+<div>
+<div class="flex items-center gap-3">
+<h4 class="text-subheading font-subheading text-on-surface">Max FOMO Score</h4>
+<span class="bg-surface-container-high px-2 py-0.5 rounded text-data-mono font-data-mono text-secondary">7</span>
+</div>
+<p class="text-body-std text-on-surface-variant text-sm mt-1 max-w-md">Calculated by AI based on entry speed and distance from EMA. Prevents chasing 'hot' moves.</p>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+</div>
+<!-- Rule Item: Max Trades per Day (OFF) -->
+<div class="bg-surface-card/40 border border-surface-border rounded-xl p-5 flex items-center justify-between opacity-70 group hover:opacity-100 transition-all">
+<div class="flex gap-5 items-start">
+<div class="w-10 h-10 rounded-lg bg-on-surface-variant/10 flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">timer</span>
+</div>
+<div>
+<h4 class="text-subheading font-subheading text-on-surface-variant">Max Trades per Day</h4>
+<p class="text-body-std text-on-surface-variant text-sm mt-1 max-w-md italic">Limits over-trading by capping total executions per 24h cycle. (Currently Inactive)</p>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Footer -->
+<div class="mt-12 flex justify-end gap-4 border-t border-surface-border pt-8">
+<button class="px-8 py-3 rounded-lg text-label-caps font-label-caps text-on-surface-variant hover:bg-surface-card transition-all">Discard Changes</button>
+<button class="px-12 py-3 rounded-lg bg-action-buy text-white text-label-caps font-label-caps shadow-lg shadow-action-buy/20 hover:scale-[1.02] active:scale-95 transition-all" id="saveBtn">
+                    Save Disciplinary Settings
+                </button>
+</div>
+</div>
+</main>
+<!-- Success Toast (Hidden by default) -->
+<div class="fixed bottom-10 right-10 glass-panel border-status-good/30 px-6 py-4 rounded-xl translate-y-20 opacity-0 transition-all duration-500 flex items-center gap-3" id="toast">
+<span class="material-symbols-outlined text-status-good" data-weight="fill">check_circle</span>
+<div>
+<p class="font-bold text-on-surface">Rules Synchronized</p>
+<p class="text-sm text-on-surface-variant">Your discipline framework is now active.</p>
+</div>
+</div>
+<script>
+        document.getElementById('saveBtn').addEventListener('click', function() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+                toast.classList.remove('translate-y-0', 'opacity-100');
+            }, 3000);
+        });
+
+        // Small interaction for switches
+        const toggles = document.querySelectorAll('input[type="checkbox"]');
+        toggles.forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                const parent = this.closest('.bg-surface-card');
+                if (this.checked) {
+                    parent.style.borderColor = 'rgba(78, 222, 163, 0.3)';
+                } else {
+                    parent.style.borderColor = '';
+                }
+            });
+        });
+    </script>
+</body></html>
