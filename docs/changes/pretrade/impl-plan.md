@@ -14,7 +14,7 @@ Kế hoạch này chi tiết hóa cách thức xây dựng phân hệ Phân tíc
    * Gửi nội dung lý do giao dịch (`reason`) và văn bản cảm xúc (`emotion_text`) qua LLM.
    * AI phản hồi JSON có cấu trúc gồm điểm số cảm xúc (FOMO, Panic, Revenge, Overconfidence, Greed, Hesitation) từ 0-10 và sinh lời khuyên kỷ luật (`coach_message`).
 4. **Cơ chế khóa kỷ luật (Soft Cooldown Trigger):**
-   * Nếu điểm số từ AI báo cáo có nguy cơ kỷ luật cao (`revenge_score >= 8` hoặc `fomo_score >= 8`), kích hoạt Soft Cooldown.
+   * Kích hoạt Soft Cooldown khi phát hiện lỗi cảm xúc nghiêm trọng (`revenge_score/fomo_score/panic_score >= 8`), phát hiện từ khóa nguy hiểm, vi phạm quy tắc mức `critical`, hoặc giao dịch quá cỡ (oversized trade điều kiện #1/#4).
    * Hiển thị màn hình phủ mờ bắt buộc trả lời câu hỏi tự phản tỉnh (`reflective_answer`) để tiếp tục.
 5. **Cơ chế Fallback an toàn:**
    * Nếu API AI lỗi hoặc hết hạn timeout (4.5s), hệ thống tự động trả về tính toán rủi ro toán học từ Backend kèm thông điệp khuyên kỷ luật mặc định để không làm gián đoạn trải nghiệm người dùng.
@@ -92,7 +92,16 @@ Với lệnh `BUY`, backend tính toán tỷ lệ R:R:
     * Sinh `coach_message` dự phòng: *"Hệ thống không thể phân tích cảm xúc lúc này do sự cố kết nối. Hãy tự rà soát kỹ luật giao dịch của bạn trước khi tiếp tục."*
     * Trả về kết quả rủi ro toán học (R:R) đã tính toán bình thường.
 
-### 4.3. Background Cron Task (Dọn dẹp log)
+### 4.3. Cơ chế kích hoạt Soft Cooldown (Soft Cooldown Trigger)
+Hệ thống sẽ đặt cờ `should_cooldown = True` nếu thỏa mãn bất kỳ điều kiện nào sau đây tại Backend:
+1.  **Chỉ số cảm xúc từ AI:** `fomo_score >= 8`, `revenge_score >= 8`, hoặc `panic_score >= 8`.
+2.  **Độ nghiêm trọng từ Rule Engine:** Xuất hiện bất kỳ lỗi vi phạm quy tắc nào có mức độ nghiêm trọng (`severity`) là `critical`.
+3.  **Từ khóa nguy hiểm (Dangerous Keywords):** Văn bản nhập liệu trong lý do giao dịch (`reason`) hoặc trạng thái tâm lý (`emotion_text`) chứa các cụm từ: `"all-in"`, `"gỡ lỗ"`, `"mua bằng mọi giá"`, `"không thể giảm nữa"`.
+4.  **Điều kiện giao dịch quá cỡ (Oversized Trade):** Thỏa mãn điều kiện #1 hoặc #4 từ bảng đặc tả Risk:
+    *   **Điều kiện #1:** `risk_percent >= 1.5 * max_risk_per_trade` (với lệnh `BUY`).
+    *   **Điều kiện #4:** Số trận thua liên tiếp `consecutive_losses >= 2` và giá trị giao dịch của lệnh hiện tại `trade_value >= 1.5 * median_trade_value_last_20` (với `trade_value = entry_price * quantity`).
+
+### 4.4. Background Cron Task (Dọn dẹp log)
 *   Xây dựng một script dọn dẹp (ví dụ bằng APScheduler chạy nền trong FastAPI hoặc Script độc lập kích hoạt hàng tuần):
     ```python
     # Logic dọn dẹp hàng tuần
