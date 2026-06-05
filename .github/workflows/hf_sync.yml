@@ -34,10 +34,18 @@ jobs:
           import os
           from huggingface_hub import HfApi
           api = HfApi(token=os.environ["HF_TOKEN"])
+          repo_id = "quochiep198/trader"
+          print(f"Ensuring Hugging Face Space '{repo_id}' exists...")
+          api.create_repo(
+              repo_id=repo_id,
+              repo_type="space",
+              space_sdk="docker",
+              exist_ok=True
+          )
           print("Uploading backend folder to Hugging Face Space...")
           api.upload_folder(
               folder_path="./backend",
-              repo_id="quochiep198/trader",
+              repo_id=repo_id,
               repo_type="space",
               path_in_repo="."
           )
