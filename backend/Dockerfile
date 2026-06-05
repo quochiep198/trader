@@ -12,8 +12,11 @@ RUN useradd -m -u 1000 user
 # Set up working directory in home directory so the user has write access
 WORKDIR /home/user/app
 
-# Copy code with user ownership
-COPY --chown=user:user . /home/user/app
+# Copy code
+COPY . /home/user/app
+
+# Recursively change ownership of home directory to user
+RUN chown -R user:user /home/user
 
 USER user
 
