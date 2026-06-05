@@ -74,23 +74,94 @@
 
 ### 3.2 Wireframe
 
+Bố cục giao diện tuân thủ phong cách **Corporate / Modern** kết hợp **Tactile** accents dựa trên tài liệu thiết kế tại [DESIGN.md](file:///d:/Traider/docs/changes/pretrade/raw/DESIGN.md) và mã nguồn mẫu [code.html](file:///d:/Traider/docs/changes/pretrade/raw/code.html).
+
+#### 3.2.1 Giao diện chính (Pre-trade Check Form - Bento Grid 12-Column)
+- **Nền ứng dụng (Background):** Màu xanh đen sâu đậm (`#131315`).
+- **Sidebar & Header:** Khung điều hướng bên trái (`#0F172A`) cố định rộng 256px (`w-64`) và topbar (`#131315`) có viền 1px (`#334155`).
+- **Bento Grid:** Gồm 12 cột cho phần nội dung chính, chia làm 2 phần lớn (Trái: 7 cột, Phải: 5 cột):
+  - **Cột trái (col-span-7):**
+    - **Trade Configuration Card:** Cấu hình lệnh bao gồm ô nhập Ticker Symbol (HPG), Action Type dạng toggle (BUY/SELL), Entry Price (có prefix `$`), và Quantity.
+    - **Strategic Rationale Card:** Trường nhập lý do giao dịch (Textarea) và Thước đo độ tự tin (Conviction Level slider từ 0 đến 10).
+  - **Cột phải (col-span-5):**
+    - **Risk Guardrails Card:** Quản trị rủi ro bao gồm trường nhập Stop-Loss (Hard Exit), Take-Profit (Target), và tính toán tự động tỷ lệ Risk/Reward Ratio. Khi thiếu Stop-loss, hệ thống hiển thị cảnh báo đỏ nổi bật.
+    - **Mental State Card:** Trường mô tả trạng thái tâm lý và cảm xúc của bản thân (Textarea) kèm các nhãn chọn nhanh (Calm, FOMO, Determined, Frustrated).
+
 ```text
-+------------------------------+
-| PRE-TRADE CHECK              |
-|------------------------------|
-| Symbol         [ HPG      ]  |
-| Action         [ BUY v    ]  |
-| Entry/Sell     [ 28500    ]  |
-| Quantity       [ 1000     ]  |
-| Stop-loss      [ 27200    ]  |
-| Take-profit    [ 31000    ]  |
-| Reason         [ ...      ]  |
-| Emotion text   [ ...      ]  |
-| Confidence     [ 7/10     ]  |
-|------------------------------|
-| [Analyze trade]              |
-+------------------------------+
++---------------------------------------------------------------------------------------------------------+
+|  TradeMind AI   |  [Header] TradeMind AI      [Market Data] [Performance] [Analytics]    [Search] [Notif] [Av] |
+|  Discipline     +---------------------------------------------------------------------------------------+
+|  Coach          |  Pre-trade Discipline Check                                                           |
+|  ---------------+  This is your behavioral mirror...                     Session Discipline Score: [ 92 ] |
+|  [ ] Dashboard  +------------------------------------------------------+--------------------------------+
+|  [*] Pre-trade  | [Icon] Trade Configuration                           | [Icon] Risk Guardrails         |
+|  [ ] Journal    | Ticker Symbol: [ HPG      ]                          | Stop-Loss: [ Required      ]   |
+|  [ ] Rules      | Action Type:   [ BUY ] [ SELL ]                      | [!] Executing without SL is... |
+|  [ ] Settings   | Entry Price:   [ 28500    ]                          | Take-Profit: [ 31000    ]      |
+|                 | Quantity:      [ 1000     ]                          | Risk/Reward Ratio: [ 1:2.4 ]   |
+|  +------------+ +------------------------------------------------------+--------------------------------+
+|  | Log Trade  | | [Icon] Strategic Rationale                           | [Icon] Mental State            |
+|  +------------+ | Primary Reason for Trade:                            | How are you feeling right now? |
+|                 | [ Describe the setup, timeframe...                 ] | [ Be honest. Are you chasing? ]|
+|  [ ] Support    |                                                      | Tags: [Calm] [FOMO] [Frustrated]|
+|  [ ] Sign Out   | Conviction Level: [--------*---] 7/10                |                                |
+| +-----------------+------------------------------------------------------+--------------------------------+
+|                 | [Check] AI is ready to analyze...                        [Save as Draft] [Analyze Trade] |
++---------------------------------------------------------------------------------------------------------+
 ```
+
+#### 3.2.2 Giao diện Trạng thái Phân tích (Loading State & Soft Cooldown Overlay)
+Khi người dùng bấm **Analyze Trade**, hệ thống sẽ kích hoạt một màn hình phủ (Overlay modal) toàn màn hình:
+1. **Trạng thái Loading (Đang phân tích):** Hiển thị vòng tròn xoay động (Spinner) cùng tiêu đề *"Analyzing Psychological Edge..."* và mô tả *"Deconstructing trade rationale against historic behavioral biases."*.
+2. **Trạng thái Soft Cooldown (Kích hoạt kỷ luật):** Nếu điểm cảm xúc `panic_score`, `revenge_score`, hoặc `fomo_score >= 8`, hệ thống hiển thị bảng cảnh báo Soft Cooldown và yêu cầu trả lời câu hỏi phản tỉnh bắt buộc (Mandatory Reflection Question).
+
+```text
++---------------------------------------------------------------------------+
+|                                                                           |
+|                       [!] Soft Cooldown Triggered                         |
+|                                                                           |
+|     +---------------------------------------------------------------+     |
+|     | AI Coaching Diagnosis:                                        |     |
+|     | "Your description suggests a 'Revenge Trade' pattern.         |     |
+|     |  You mentioned a previous loss 14 minutes ago.                |     |
+|     |  This trade entry is aggressive."                             |     |
+|     |                                                               |     |
+|     | Mandatory Reflection Question:                                |     |
+|     | [!] Does this trade meet 100% of your pre-defined strategy     |     |
+|     |     rules, or is it an emotional reaction?                    |     |
+|     |                                                               |     |
+|     | [ Type your reflection answer here...                       ] |     |
+|     +---------------------------------------------------------------+     |
+|                                                                           |
+|     [ Cancel Trade ]                         [ Acknowledge & Proceed ]    |
+|                                                                           |
++---------------------------------------------------------------------------+
+```
+
+#### 3.2.3 Đặc tả các tham số thiết kế (Design Tokens)
+Dựa trên hệ thống thiết kế tại [DESIGN.md](file:///d:/Traider/docs/changes/pretrade/raw/DESIGN.md):
+- **Bảng màu (Colors):**
+  - Nền chính (Canvas Background): `#131315`
+  - Thẻ Acrylic bóng mờ (Surface Card): `#1E293B`
+  - Viền thẻ (Surface Border): `#334155`
+  - Màu chính (Primary - Accent): `#BEC6E0`
+  - Cảnh báo rủi ro cao (Status High Risk): `#F43F5E` (áp dụng cho cảnh báo thiếu Stop-Loss, viền thẻ vi phạm)
+  - Cooldown/Cảnh báo vừa (Status Caution): `#F59E0B` (áp dụng cho icon cảnh báo trong Soft Cooldown)
+  - Trạng thái tốt (Status Good): `#10B981` (áp dụng cho tỷ lệ Risk/Reward, điểm kỷ luật cao)
+  - Nút Mua (Action BUY): `#3B82F6` / Nút Bán (Action SELL): `#F43F5E`
+- **Typography:**
+  - Font chữ chính: **Inter** (cho văn bản thường, nhãn, tiêu đề).
+  - Font số liệu: **JetBrains Mono** (cho Symbol, Entry Price, Quantity, Stop-Loss, Take-Profit, Risk/Reward Ratio).
+  - Cỡ chữ & Trọng số:
+    - Điểm Kỷ luật chính (Display Score): 48px, bold, line-height 56px.
+    - Tiêu đề Card (Headline MD): 24px, semi-bold, line-height 32px.
+    - Nhãn input (Label Caps): 12px, semi-bold, uppercase, letter-spacing 0.05em.
+- **Bo góc (Rounded corners):**
+  - Các ô nhập dữ liệu, nút bấm: 4px (`0.25rem`).
+  - Các thẻ Acrylic (Cards): 8px (`0.5rem`).
+  - Nút chuyển đổi (Toggle): bo tròn hoàn toàn (`9999px` hoặc `0.75rem`).
+- **Hiệu ứng lớp phủ (Elevation & Depth):**
+  - Soft Cooldown Overlay sử dụng lớp phủ làm mờ hậu cảnh `backdrop-filter: blur(12px)` kết hợp với lớp phủ tối mờ bán trong suốt nhằm thu hút sự tập trung cao độ của người dùng vào câu hỏi phản tỉnh.
 
 ---
 

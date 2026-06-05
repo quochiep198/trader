@@ -43,3 +43,26 @@ def read_root():
 
 # Đăng ký router chính (ở thời điểm hiện tại chỉ chứa auth router phục vụ Login)
 app.include_router(api_router, prefix=settings.API_V1_STR)
+
+# Khởi chạy background worker dọn dẹp log định kỳ (24h một lần)
+import threading
+import time
+from app.tasks.retention_worker import cleanup_old_logs
+from app.core.database import SessionLocal
+
+def run_retention_worker():
+    # Chờ 10 giây sau khi app khởi động để tránh xung đột DB
+    time.sleep(10)
+    while True:
+        try:
+            print("Running scheduled data retention cleanup task...")
+            with SessionLocal() as db:
+                cleanup_old_logs(db)
+            print("Data retention cleanup completed successfully.")
+        except Exception as e:
+            print(f"Error in data retention worker: {e}")
+        # Sleep 24 hours
+        time.sleep(86400)
+
+# Khởi tạo luồng chạy nền daemon
+threading.Thread(target=run_retention_worker, daemon=True).start()

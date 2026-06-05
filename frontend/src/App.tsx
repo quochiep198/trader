@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import PersonalRules from './pages/PersonalRules';
+import PreTradeCheck from './pages/PreTradeCheck';
 import Layout from './components/Layout';
 import { MessageProperties } from './services/message';
 import './styles/css/App.css';
@@ -53,6 +54,12 @@ function AppContent() {
       return <Register />;
     case '#login':
       return <Login />;
+    case '#pre-trade':
+      return (
+        <Layout title={MessageProperties.PRETRADE_PAGE_TITLE}>
+          <PreTradeCheck />
+        </Layout>
+      );
     case '#rules':
     default:
       return (
