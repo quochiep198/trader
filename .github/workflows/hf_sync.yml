@@ -44,8 +44,13 @@ jobs:
           try:
               print("Testing authentication with HF_TOKEN...")
               whoami = api.whoami()
-              print(f"Successfully authenticated as Hugging Face user: {whoami.get('name')} ({whoami.get('type')})")
-              print(f"Token permissions: {whoami.get('auth', {}).get('accessToken', {}).get('role', 'unknown')}")
+              username = whoami.get("name")
+              user_type = whoami.get("type")
+              auth_info = whoami.get("auth", {})
+              token_info = auth_info.get("accessToken", {})
+              role = token_info.get("role", "unknown")
+              print("Successfully authenticated as Hugging Face user: " + str(username) + " (" + str(user_type) + ")")
+              print("Token permissions role: " + str(role))
           except Exception as e:
               print(f"Error authenticating with HF_TOKEN: {e}")
               print("Please verify your HF_TOKEN is correct and has Write access.")
