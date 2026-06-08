@@ -9,7 +9,7 @@ class AIService:
         self.api_url = "https://openrouter.ai/api/v1/chat/completions"
         self.model = settings.OPENROUTER_MODEL
 
-    async def analyze_emotion(self, reason: str, emotion_text: str) -> Optional[Dict[str, Any]]:
+    async def analyze_emotion(self, reason: str, emotion_text: str, market_context: Optional[Dict[str, Any]] = None) -> Optional[Dict[str, Any]]:
         if not self.api_key or self.api_key == "dummy_key":
             return None
 
@@ -24,6 +24,7 @@ class AIService:
             "Bạn là AI Trading Discipline Coach cho sản phẩm TradeMind AI.\n"
             "Nhiệm vụ của bạn:\n"
             "- Phân tích cảm xúc và rủi ro hành vi trong bối cảnh người dùng đang cân nhắc giao dịch chứng khoán.\n"
+            "- Phối hợp thông tin tâm lý của người dùng với Bối cảnh thị trường (Market Context) nếu có để đưa ra những phân tích sâu sát (ví dụ: đang FOMO mà giá lại đang tăng mạnh liên tiếp nhiều phiên, hoặc đang hoảng loạn Panic mà giá đang rơi sâu).\n"
             "- Phát hiện các trạng thái cảm xúc chính (FOMO, Panic, Revenge trading, Overconfidence, Greed, Hesitation) và chấm điểm thang 0-10 cho mỗi trạng thái.\n"
             "- Trả về kết quả dưới định dạng JSON duy nhất, tuyệt đối không giải thích thêm, không bọc trong markdown code block (như ```json).\n"
             "\n"
@@ -39,7 +40,7 @@ class AIService:
             "  \"discipline_risk\": \"high\",\n"
             "  \"should_cooldown\": true,\n"
             "  \"reason\": \"Tóm tắt lý do cảm xúc của user bằng tiếng Việt\",\n"
-            "  \"coach_message\": \"Lời khuyên kỷ luật bằng tiếng Việt\",\n"
+            "  \"coach_message\": \"Lời khuyên kỷ luật bằng tiếng Việt kết hợp phân tích bối cảnh giá nếu có\",\n"
             "  \"reflection_question\": \"Câu hỏi tự phản tỉnh bằng tiếng Việt (bắt buộc nếu should_cooldown=true, ngược lại để null)\"\n"
             "}\n"
             "\n"
@@ -55,6 +56,17 @@ class AIService:
             f"Lý do giao dịch: {reason}\n"
             f"Cảm xúc mô tả: {emotion_text}"
         )
+
+        if market_context:
+            prompt_user += (
+                f"\n\nBối cảnh thị trường (Market Context):\n"
+                f"- Giá hiện tại: {market_context.get('current_price')} VND\n"
+                f"- Biến động giá 3 ngày qua: {market_context.get('price_change_3d', 0)}%\n"
+                f"- Số phiên tăng liên tục: {market_context.get('consecutive_up_sessions', 0)} phiên\n"
+                f"- Số phiên giảm liên tục: {market_context.get('consecutive_down_sessions', 0)} phiên\n"
+                f"- Khối lượng giao dịch so với TB 20 ngày: {market_context.get('volume_vs_20d_avg', 1.0)}x\n"
+                f"- Độ lệch giá hiện tại so với entry kế hoạch: {market_context.get('current_vs_entry_percent', 0)}%\n"
+            )
 
         payload = {
             "model": self.model,

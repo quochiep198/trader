@@ -33,6 +33,25 @@ interface AIIntervention {
   reflection_question: string;
 }
 
+interface MarketContextResponse {
+  symbol: string;
+  current_price: number;
+  price_change_1d: number;
+  price_change_3d: number;
+  price_change_5d: number;
+  price_change_20d: number;
+  consecutive_up_sessions: number;
+  consecutive_down_sessions: number;
+  volume_vs_20d_avg: number;
+  current_vs_entry_percent: number;
+  distance_to_stop_loss_percent: number | null;
+  distance_to_take_profit_percent: number | null;
+  data_status: string;
+  market_context_risk: string;
+  market_warnings: string[];
+  message: string;
+}
+
 interface TradeCheckResponse {
   log_id: string;
   discipline_score: number;
@@ -44,6 +63,7 @@ interface TradeCheckResponse {
   rule_violations: RuleViolation[];
   emotion_scores: EmotionScores;
   intervention: AIIntervention | null;
+  market_context: MarketContextResponse | null;
 }
 
 export default function PreTradeCheck() {
@@ -64,6 +84,10 @@ export default function PreTradeCheck() {
   // Quick tag selection helper
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const emotionTags = ["Calm", "FOMO", "Determined", "Frustrated"];
+
+  // Market context states
+  const [marketSnapshot, setMarketSnapshot] = useState<any>(null);
+  const [isFetchingSnapshot, setIsFetchingSnapshot] = useState(false);
 
   // UI Flow state
   const [isLoading, setIsLoading] = useState(false);
@@ -96,6 +120,34 @@ export default function PreTradeCheck() {
       setClientRR('—');
     }
   }, [action, entryPrice, stopLoss, takeProfit]);
+
+  useEffect(() => {
+    const cleanSymbol = symbol.trim().toUpperCase();
+    if (cleanSymbol.length < 3) {
+      setMarketSnapshot(null);
+      return;
+    }
+
+    const delayDebounceFn = setTimeout(async () => {
+      try {
+        setIsFetchingSnapshot(true);
+        const res = await api.get(`/trade-check/market/snapshot`, {
+          params: { symbol: cleanSymbol }
+        });
+        setMarketSnapshot(res.data);
+      } catch (err) {
+        console.error("Failed to fetch market snapshot", err);
+        setMarketSnapshot({
+          symbol: cleanSymbol,
+          data_status: "unavailable"
+        });
+      } finally {
+        setIsFetchingSnapshot(false);
+      }
+    }, 800);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [symbol]);
 
   // Handle Quick tag toggle
   const toggleTag = (tag: string) => {
@@ -498,6 +550,85 @@ export default function PreTradeCheck() {
               ))}
             </div>
           </div>
+
+          {/* Market Context Card */}
+          <div className={styles.card}>
+            <div className={styles.cardHeader}>
+              <span className={`material-symbols-outlined ${styles.cardIcon}`}>trending_up</span>
+              <h3 className={styles.cardTitle}>Bối cảnh thị trường</h3>
+            </div>
+            {isFetchingSnapshot ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 0' }}>
+                <span className={styles.loaderSpinner} style={{ width: '16px', height: '16px', border: '2px solid rgba(255,255,255,0.1)', borderTop: '2px solid #6366f1' }}></span>
+                <span style={{ fontSize: '0.8125rem', color: 'hsl(var(--text-secondary))' }}>Đang tải bối cảnh thị trường...</span>
+              </div>
+            ) : marketSnapshot ? (
+              marketSnapshot.data_status === 'unavailable' ? (
+                <div style={{ fontSize: '0.8125rem', color: 'hsl(var(--text-muted))', padding: '8px 0', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: '16px', color: 'hsl(var(--color-warning))' }}>warning</span>
+                  Không có dữ liệu giá đủ mới. Kết quả kiểm tra hiện chỉ dựa trên các quy tắc và cảm xúc.
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '8px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.8125rem', color: 'hsl(var(--text-secondary))' }}>Giá hiện tại:</span>
+                    <strong style={{ fontSize: '0.95rem', color: '#fff', fontFamily: 'monospace' }}>
+                      {marketSnapshot.current_price ? marketSnapshot.current_price.toLocaleString() : '—'} VND
+                    </strong>
+                  </div>
+                  
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px', borderTop: '1px solid hsl(var(--border-color))', paddingTop: '10px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <span style={{ fontSize: '0.75rem', color: 'hsl(var(--text-muted))' }}>Biến động 1D:</span>
+                      <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: (marketSnapshot.price_change_1d ?? 0) >= 0 ? 'hsl(var(--color-success))' : 'hsl(var(--color-danger))' }}>
+                        {(marketSnapshot.price_change_1d ?? 0) >= 0 ? '+' : ''}{(marketSnapshot.price_change_1d ?? 0).toFixed(2)}%
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <span style={{ fontSize: '0.75rem', color: 'hsl(var(--text-muted))' }}>Biến động 3D:</span>
+                      <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: (marketSnapshot.price_change_3d ?? 0) >= 0 ? 'hsl(var(--color-success))' : 'hsl(var(--color-danger))' }}>
+                        {(marketSnapshot.price_change_3d ?? 0) >= 0 ? '+' : ''}{(marketSnapshot.price_change_3d ?? 0).toFixed(2)}%
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <span style={{ fontSize: '0.75rem', color: 'hsl(var(--text-muted))' }}>Chuỗi phiên:</span>
+                      <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#fff' }}>
+                        {marketSnapshot.consecutive_up_sessions > 0 ? `${marketSnapshot.consecutive_up_sessions} phiên TĂNG` : marketSnapshot.consecutive_down_sessions > 0 ? `${marketSnapshot.consecutive_down_sessions} phiên GIẢM` : 'Không đổi'}
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <span style={{ fontSize: '0.75rem', color: 'hsl(var(--text-muted))' }}>Khối lượng (20D):</span>
+                      <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: (marketSnapshot.volume_vs_20d_avg ?? 1) >= 2 ? 'hsl(var(--color-warning))' : '#fff' }}>
+                        {(marketSnapshot.volume_vs_20d_avg ?? 1).toFixed(1)}x trung bình
+                      </span>
+                    </div>
+                  </div>
+                  
+                  {action === 'BUY' && entryPrice && marketSnapshot.current_price && (
+                    <div style={{ borderTop: '1px solid hsl(var(--border-color))', paddingTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontSize: '0.75rem', color: 'hsl(var(--text-secondary))' }}>Đo độ lệch Entry:</span>
+                      <span style={{ 
+                        fontSize: '0.8125rem', 
+                        fontWeight: 600, 
+                        color: ((marketSnapshot.current_price - parseFloat(entryPrice)) / parseFloat(entryPrice) * 100) >= 3 ? 'hsl(var(--color-danger))' : 'hsl(var(--color-success))' 
+                      }}>
+                        {((marketSnapshot.current_price - parseFloat(entryPrice)) / parseFloat(entryPrice) * 100).toFixed(1)}% {((marketSnapshot.current_price - parseFloat(entryPrice)) / parseFloat(entryPrice) * 100) >= 0 ? 'trên' : 'dưới'} Entry
+                      </span>
+                    </div>
+                  )}
+
+                  <div style={{ borderTop: '1px solid hsl(var(--border-color))', paddingTop: '8px', fontSize: '0.7rem', color: 'hsl(var(--text-muted))', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>info</span>
+                    <span>Thông tin bối cảnh kỷ luật giá, không phải khuyến nghị đầu tư.</span>
+                  </div>
+                </div>
+              )
+            ) : (
+              <div style={{ fontSize: '0.8125rem', color: 'hsl(var(--text-muted))', padding: '8px 0' }}>
+                Nhập mã chứng khoán (ví dụ: HPG, VIC, VNM) để phân tích bối cảnh.
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Disclaimer Vietnamese */}
@@ -629,6 +760,50 @@ export default function PreTradeCheck() {
                   <p className={styles.resultDiagnosis}>
                     {tradeResponse.coach_message}
                   </p>
+
+                  {/* Market Context Section */}
+                  {tradeResponse.market_context && (
+                    <div style={{ 
+                      marginTop: '16px',
+                      marginBottom: '16px',
+                      padding: '12px', 
+                      backgroundColor: tradeResponse.market_context.market_context_risk === 'high' ? 'rgba(239, 68, 68, 0.08)' : tradeResponse.market_context.market_context_risk === 'medium' ? 'rgba(245, 158, 11, 0.08)' : 'rgba(255, 255, 255, 0.02)',
+                      border: `1px solid ${tradeResponse.market_context.market_context_risk === 'high' ? 'rgba(239, 68, 68, 0.2)' : tradeResponse.market_context.market_context_risk === 'medium' ? 'rgba(245, 158, 11, 0.2)' : 'rgba(255, 255, 255, 0.06)'}`,
+                      borderRadius: 'var(--radius-sm)'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
+                        <span className="material-symbols-outlined" style={{ 
+                          fontSize: '18px', 
+                          color: tradeResponse.market_context.market_context_risk === 'high' ? 'hsl(var(--color-danger))' : tradeResponse.market_context.market_context_risk === 'medium' ? 'hsl(var(--color-warning))' : 'hsl(var(--text-secondary))' 
+                        }}>
+                          {tradeResponse.market_context.market_context_risk === 'high' ? 'error' : tradeResponse.market_context.market_context_risk === 'medium' ? 'warning' : 'trending_up'}
+                        </span>
+                        <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#fff' }}>
+                          Bối cảnh thị trường ({tradeResponse.market_context.market_context_risk.toUpperCase()} Risk)
+                        </span>
+                      </div>
+                      <p style={{ fontSize: '0.8125rem', color: 'hsl(var(--text-secondary))', lineHeight: '1.4', margin: 0 }}>
+                        {tradeResponse.market_context.message}
+                      </p>
+                      {tradeResponse.market_context.market_warnings.length > 0 && (
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '10px' }}>
+                          {tradeResponse.market_context.market_warnings.map((w, idx) => (
+                            <span key={idx} style={{ 
+                              fontSize: '0.7rem', 
+                              fontWeight: 500,
+                              padding: '2px 6px',
+                              backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                              border: '1px solid rgba(255, 255, 255, 0.1)',
+                              color: 'hsl(var(--text-secondary))',
+                              borderRadius: '4px'
+                            }}>
+                              {w}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
 
                   {tradeResponse.rule_violations.length > 0 ? (
                     <>

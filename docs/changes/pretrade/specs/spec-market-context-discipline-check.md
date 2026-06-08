@@ -85,6 +85,7 @@ Module này **không**:
 | R-MKT-7 | Giá gần stop-loss tạo warning `near_stop_loss`; wording nhắc người dùng không dời SL vì cảm xúc. | AC-MKT-2, AC-MKT-6 |
 | R-MKT-8 | Giá gần take-profit tạo warning `near_take_profit`; wording nhắc người dùng kiểm tra kế hoạch thoát. | AC-MKT-2, AC-MKT-6 |
 | R-MKT-9 | Market warnings không hard block người dùng. | AC-MKT-6 |
+| R-MKT-10 | Market warnings mang tính chất cảnh báo bối cảnh hành vi và hỗ trợ AI Coach, không trừ điểm kỷ luật (discipline_score) của Rule Engine và không trực tiếp kích hoạt cooldown (trừ phi điểm số cảm xúc vượt ngưỡng quy định sẵn). | AC-MKT-6 |
 
 ---
 
@@ -140,10 +141,10 @@ Module này **không**:
 | consecutive_up_sessions | integer | Đếm số phiên close tăng liên tiếp gần nhất. |
 | consecutive_down_sessions | integer | Đếm số phiên close giảm liên tiếp gần nhất. |
 | volume_vs_20d_avg | number | `latest_volume / avg(volume_last_20_sessions)`. |
-| current_vs_entry_percent | number | `(current_price - entry_price) / entry_price * 100`. |
-| distance_to_stop_loss_percent | number/null | Với BUY có SL: `(current_price - stop_loss) / current_price * 100`. |
-| distance_to_take_profit_percent | number/null | Với BUY có TP: `(take_profit - current_price) / current_price * 100`. |
-| data_status | enum | fresh/stale/unavailable. |
+| current_vs_entry_percent | number | Đối với `BUY`: `(current_price - entry_price) / entry_price * 100`. <br> Đối với `SELL_TO_CLOSE`: `(current_price - average_entry_price) / average_entry_price * 100`. |
+| distance_to_stop_loss_percent | number/null | Với `BUY` có SL: `(current_price - stop_loss) / current_price * 100`. <br> Với `SELL_TO_CLOSE`: `null` (không áp dụng). |
+| distance_to_take_profit_percent | number/null | Với `BUY` có TP: `(take_profit - current_price) / current_price * 100`. <br> Với `SELL_TO_CLOSE`: `null` (không áp dụng). |
+| data_status | enum | **fresh**: Dữ liệu mới nhất. Trong giờ giao dịch (T2-T6, 9:00-15:00), trễ < 15 phút. Ngoài giờ giao dịch hoặc cuối tuần, giá đóng cửa của phiên gần nhất được coi là fresh. <br> **stale**: Dữ liệu trễ > 15 phút trong giờ giao dịch, hoặc thiếu dữ liệu của phiên gần nhất ngoài giờ. <br> **unavailable**: Không lấy được dữ liệu. |
 
 ---
 
@@ -154,13 +155,17 @@ Module này **không**:
 | market_fomo_context | `price_change_3d >= 7` hoặc `consecutive_up_sessions >= 3`, và `fomo_score >= 6` | high | Nhắc user kiểm tra FOMO, không mua đuổi. |
 | buying_chase_risk | `current_vs_entry_percent >= 3` với action BUY | medium/high | Nhắc user cập nhật lại entry/SL/risk nếu giá đã vượt kế hoạch. |
 | panic_context | `price_change_3d <= -7` hoặc `consecutive_down_sessions >= 3`, và `panic_score >= 6` | high | Nhắc user kiểm tra panic, không bán vì hoảng loạn. |
-| near_stop_loss | `0 < distance_to_stop_loss_percent <= 2` | medium | Nhắc user không dời stop-loss vì không muốn chấp nhận sai. |
-| near_take_profit | `0 < distance_to_take_profit_percent <= 2` | low/medium | Nhắc user kiểm tra kế hoạch chốt lời thay vì sợ mất lãi. |
+| near_stop_loss | `0 < distance_to_stop_loss_percent <= 2` với action BUY | medium | Nhắc user không dời stop-loss vì không muốn chấp nhận sai. |
+| near_take_profit | `0 < distance_to_take_profit_percent <= 2` với action BUY | low/medium | Nhắc user kiểm tra kế hoạch chốt lời thay vì sợ mất lãi. |
 | volume_spike_context | `volume_vs_20d_avg >= 2` | medium | Nhắc user cẩn trọng với biến động mạnh gây cảm xúc. |
 | stale_market_data | `data_status = stale` | low | Không tạo warning mạnh dựa trên giá. |
 | unavailable_market_data | `data_status = unavailable` | low | Không ảnh hưởng check core. |
 
-> Các ngưỡng 7%, 3%, 2%, 2x là cấu hình MVP. Có thể đưa vào env/config để điều chỉnh sau khi test người dùng.
+> **Ghi chú về luồng xử lý (Giải quyết Circular Dependency):** 
+> 1. Để tránh vòng lặp phụ thuộc, backend sẽ tính toán các chỉ số giá trước, sau đó gửi các chỉ số này sang AI Coach. 
+> 2. AI Coach thực hiện phân tích cảm xúc từ lý do của người dùng kết hợp với bối cảnh giá để trả về điểm cảm xúc (`fomo_score`, `panic_score`...) và `coach_message`.
+> 3. Sau khi AI trả về kết quả, backend sẽ kết hợp điểm cảm xúc và chỉ số giá để xác định danh sách `market_warnings` chính thức nhằm hiển thị trên UI và lưu log.
+> 4. Các cảnh báo này hoàn toàn mang tính thông tin hỗ trợ hành vi, không tính điểm phạt vào `discipline_score` của Rule Engine. Ngưỡng 7%, 3%, 2%, 2x là cấu hình MVP, có thể đưa vào env/config để điều chỉnh sau.
 
 ---
 
@@ -285,10 +290,13 @@ created_at
 
 ### 8.2 market_context_logs
 
+Bản ghi bối cảnh giá được lưu **ngay khi thực hiện pre-trade check** để bảo toàn lịch sử bối cảnh của tất cả các lượt check.
+
 ```text
 id
 user_id
-trade_id
+emotion_log_id        (UUID, ForeignKey liên kết với emotion_logs.id, nullable=False)
+trade_id              (UUID, ForeignKey liên kết với trades.id, nullable=True, cập nhật khi trade được ghi nhận vào nhật ký)
 symbol
 current_price
 price_change_1d
@@ -308,15 +316,10 @@ message
 created_at
 ```
 
-### 8.3 trades extension
+### 8.3 Relationship & Alignment
 
-Có thể thêm field nullable:
-
-```text
-market_context_log_id
-```
-
-Hoặc lưu quan hệ `trades 1--1 market_context_logs`.
+* Khi thực hiện `POST /trade-check`, backend đồng thời tạo một bản ghi `EmotionLog` và một bản ghi `MarketContextLog` liên kết qua `emotion_log_id`.
+* Khi người dùng lưu giao dịch vào nhật ký (chuyển đổi kết quả check thành một giao dịch thực tế trong bảng `trades`), hệ thống sẽ cập nhật trường `trade_id` cho cả `EmotionLog` và `MarketContextLog`. Bảng `trades` cũng có thể lưu thêm khóa ngoại nullable `market_context_log_id` để tiện truy vấn 1-1.
 
 ---
 
@@ -360,7 +363,7 @@ class MarketContextAnalyzer:
 
 ## 10. AI Prompt Contract
 
-AI không nhận raw OHLCV dài nếu không cần. Backend chỉ gửi metrics đã tính.
+AI không nhận raw OHLCV dài nếu không cần. Backend chỉ gửi metrics đã tính toán để tránh vòng lặp phụ thuộc chéo (circular dependency). AI sẽ thực hiện đánh giá cảm xúc và phản hồi huấn luyện viên trong một lượt gọi.
 
 ### Input cho AI Coach
 
@@ -375,17 +378,13 @@ AI không nhận raw OHLCV dài nếu không cần. Backend chỉ gửi metrics 
     "reason": "Tôi sợ nó chạy mất",
     "emotion_text": "Đang FOMO"
   },
-  "emotion_scores": {
-    "fomo_score": 8,
-    "panic_score": 1,
-    "revenge_score": 0
-  },
   "market_context": {
+    "current_price": 29500,
     "price_change_3d": 8.2,
     "consecutive_up_sessions": 3,
     "volume_vs_20d_avg": 2.1,
     "current_vs_entry_percent": 3.5,
-    "market_warnings": ["market_fomo_context", "buying_chase_risk"]
+    "data_status": "fresh"
   },
   "guardrails": [
     "Do not recommend buy or sell",
@@ -396,11 +395,23 @@ AI không nhận raw OHLCV dài nếu không cần. Backend chỉ gửi metrics 
 }
 ```
 
-### Output mong muốn
+### Output mong muốn từ AI
+
+AI phân tích bối cảnh và tự quyết định điểm số cảm xúc cùng thông điệp phản hồi:
 
 ```json
 {
-  "coach_message": "Giá đã tăng mạnh trong nhiều phiên và đang cao hơn vùng entry bạn dự kiến. Kết hợp với cảm xúc FOMO, đây là bối cảnh dễ dẫn đến mua đuổi. Hãy tạm dừng, kiểm tra lại stop-loss và risk_percent trước khi quyết định.",
+  "emotion_tags": ["FOMO", "Urgency"],
+  "fomo_score": 8,
+  "panic_score": 1,
+  "revenge_score": 0,
+  "overconfidence_score": 4,
+  "greed_score": 3,
+  "hesitation_score": 1,
+  "discipline_risk": "high",
+  "should_cooldown": true,
+  "coach_message": "Giá đã tăng mạnh trong nhiều phiên và đang cao hơn vùng entry bạn dự kiến. Kết hợp với cảm xúc FOMO bạn tự nhận định, đây là bối cảnh dễ dẫn đến mua đuổi. Hãy tạm dừng, kiểm tra lại kế hoạch giao dịch của bạn trước khi quyết định.",
+  "reflection_question": "Nếu giao dịch này đi ngược lại kỳ vọng và chạm stop-loss, bạn có sẵn sàng chấp nhận mức lỗ lớn hơn do mua đuổi ở vùng giá này không?",
   "guardrail_safe": true
 }
 ```
@@ -509,10 +520,10 @@ MARKET_NEAR_TP_THRESHOLD=2
 Module được xem là hoàn thành khi:
 
 - Có provider interface và mock provider.
-- Tính đúng metrics bằng unit tests.
-- Tạo warning đúng theo test cases.
-- Tích hợp được với POST /trade-check.
-- UI hiển thị Market Context card và fallback state.
+- Tính đúng các metrics bằng các unit tests.
+- Tạo đúng mã warning theo các test cases cụ thể trên backend sau khi AI trả về kết quả cảm xúc.
+- Tích hợp thành công và mở rộng response của `POST /trade-check` an toàn.
+- UI hiển thị Market Context card và fallback khi dữ liệu cũ/ngoại tuyến.
 - Không vi phạm AI Guardrails.
-- Market data lỗi không làm hỏng pre-trade flow.
-- Log market_context_logs khi user lưu journal từ kết quả check.
+- Lỗi kết nối hoặc dữ liệu thị trường không làm hỏng luồng pre-trade check cốt lõi.
+- Lưu trữ thành công bản ghi `market_context_logs` đồng thời với `EmotionLog` khi người dùng chạy pre-trade check và cập nhật liên kết `trade_id` khi lưu nhật ký thành công.

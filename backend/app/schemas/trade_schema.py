@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 from typing import List, Optional, Dict, Any
 from uuid import UUID
 from decimal import Decimal
+from datetime import datetime
 
 class TradeCheckInput(BaseModel):
     symbol: str = Field(..., min_length=1, description="Ticker symbol")
@@ -92,6 +93,38 @@ class AIIntervention(BaseModel):
     is_required: bool
     reflection_question: str
 
+class MarketContextResponse(BaseModel):
+    symbol: str
+    current_price: float
+    price_change_1d: float
+    price_change_3d: float
+    price_change_5d: float
+    price_change_20d: float
+    consecutive_up_sessions: int
+    consecutive_down_sessions: int
+    volume_vs_20d_avg: float
+    current_vs_entry_percent: float
+    distance_to_stop_loss_percent: Optional[float] = None
+    distance_to_take_profit_percent: Optional[float] = None
+    data_status: str
+    market_context_risk: str
+    market_warnings: List[str]
+    message: str
+
+class MarketSnapshotResponse(BaseModel):
+    symbol: str
+    provider: str
+    current_price: float
+    fetched_at: datetime
+    data_status: str
+    price_change_1d: float
+    price_change_3d: float
+    price_change_5d: float
+    price_change_20d: float
+    consecutive_up_sessions: int
+    consecutive_down_sessions: int
+    volume_vs_20d_avg: float
+
 class TradeCheckResponse(BaseModel):
     log_id: UUID
     discipline_score: int
@@ -103,7 +136,19 @@ class TradeCheckResponse(BaseModel):
     rule_violations: List[RuleViolation]
     emotion_scores: EmotionScores
     intervention: Optional[AIIntervention] = None
+    market_context: Optional[MarketContextResponse] = None
+
+class MarketContextCheckInput(BaseModel):
+    symbol: str
+    action: str
+    entry_price: Optional[float] = None
+    stop_loss: Optional[float] = None
+    take_profit: Optional[float] = None
+    average_entry_price: Optional[float] = None
+    emotion_scores: EmotionScores
 
 class AcknowledgeResponse(BaseModel):
     success: bool
     message: str
+
+
