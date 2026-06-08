@@ -27,16 +27,18 @@ def override_get_db():
     finally:
         db.close()
 
-app.dependency_overrides[get_db] = override_get_db
 
 class TestTradesCheck(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         Base.metadata.create_all(bind=engine)
+        app.dependency_overrides[get_db] = override_get_db
         cls.client = TestClient(app)
 
     @classmethod
     def tearDownClass(cls):
+        if get_db in app.dependency_overrides:
+            del app.dependency_overrides[get_db]
         Base.metadata.drop_all(bind=engine)
         if os.path.exists("./test_trades.db"):
             try:

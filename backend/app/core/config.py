@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     
     DATABASE_URL: str = "sqlite:///./sql_app.db"
     OPENROUTER_API_KEY: str = "dummy_key"
-    OPENROUTER_MODEL: str = "google/gemma-2-9b-it:free"
+    OPENROUTER_MODEL: str = "google/gemma-4-31b-it:free"
 
     @property
     def sqlalchemy_database_url(self) -> str:

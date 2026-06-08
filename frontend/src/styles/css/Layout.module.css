@@ -12,9 +12,9 @@
 }
 
 .content {
-  margin-left: 260px;
-  margin-top: 64px;
-  padding: 32px;
+  margin-left: var(--sidebar-width);
+  margin-top: var(--header-height);
+  padding: var(--content-padding);
   flex: 1;
   overflow-y: auto;
 }

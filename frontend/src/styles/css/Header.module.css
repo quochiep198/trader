@@ -1,8 +1,8 @@
 .header {
-  height: 64px;
-  width: calc(100% - 260px);
-  margin-left: 260px;
-  padding: 0 32px;
+  height: var(--header-height);
+  width: calc(100% - var(--sidebar-width));
+  margin-left: var(--sidebar-width);
+  padding: 0 var(--content-padding);
   background-color: hsl(var(--bg-main));
   border-bottom: 1px solid hsl(var(--border-color));
   display: flex;
@@ -17,7 +17,7 @@
 .leftSection {
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: 20px;
 }
 
 .title {

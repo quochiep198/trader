@@ -25,17 +25,20 @@ def override_get_db():
     finally:
         db.close()
 
-app.dependency_overrides[get_db] = override_get_db
 
 class TestTradingRules(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Create all tables in the test database
         Base.metadata.create_all(bind=engine)
+        app.dependency_overrides[get_db] = override_get_db
         cls.client = TestClient(app)
 
     @classmethod
     def tearDownClass(cls):
+        # Clear dependency override to prevent leakage
+        if get_db in app.dependency_overrides:
+            del app.dependency_overrides[get_db]
         # Drop all tables and clean up test file
         Base.metadata.drop_all(bind=engine)
         if os.path.exists("./test_sql_app.db"):

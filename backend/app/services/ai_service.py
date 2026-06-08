@@ -63,28 +63,42 @@ class AIService:
                 {"role": "user", "content": prompt_user}
             ],
             "response_format": {"type": "json_object"},
-            "temperature": 0.3
+            "temperature": 0.3,
+            "max_tokens": 1000
         }
 
+        models_to_try = [self.model, "liquid/lfm-2.5-1.2b-instruct:free", "openrouter/free"]
+        # Remove duplicates while preserving order
+        models_to_try = list(dict.fromkeys(m for m in models_to_try if m))
+
         try:
-            async with httpx.AsyncClient(timeout=4.5) as client:
-                response = await client.post(self.api_url, headers=headers, json=payload)
-                if response.status_code == 200:
-                    data = response.json()
-                    content = data["choices"][0]["message"]["content"].strip()
-                    # Clean markdown code fences if returned
-                    if content.startswith("```"):
-                        lines = content.splitlines()
-                        if lines[0].startswith("```"):
-                            lines = lines[1:]
-                        if lines[-1].startswith("```"):
-                            lines = lines[:-1]
-                        content = "\n".join(lines).strip()
-                    parsed = json.loads(content)
-                    return parsed
-                else:
-                    print(f"OpenRouter Error Status: {response.status_code}, Body: {response.text}")
-                    return None
+            async with httpx.AsyncClient(timeout=15.0) as client:
+                for model_name in models_to_try:
+                    payload["model"] = model_name
+                    print(f"Trying OpenRouter with model: {model_name}...")
+                    try:
+                        response = await client.post(self.api_url, headers=headers, json=payload)
+                        if response.status_code == 200:
+                            data = response.json()
+                            content = data["choices"][0]["message"]["content"].strip()
+                            # Clean markdown code fences if returned
+                            if content.startswith("```"):
+                                lines = content.splitlines()
+                                if lines[0].startswith("```"):
+                                    lines = lines[1:]
+                                if lines[-1].startswith("```"):
+                                    lines = lines[:-1]
+                                content = "\n".join(lines).strip()
+                            parsed = json.loads(content)
+                            print(f"Successfully retrieved AI response using model: {model_name}")
+                            return parsed
+                        else:
+                            print(f"OpenRouter error for model {model_name} (Status {response.status_code}): {response.text}")
+                    except Exception as model_err:
+                        print(f"OpenRouter exception for model {model_name}: {str(model_err)}")
+                
+                # If all models failed
+                return None
         except Exception as e:
-            print(f"OpenRouter Connection Exception: {str(e)}")
+            print(f"OpenRouter client exception: {str(e)}")
             return None

@@ -66,3 +66,5 @@ def run_retention_worker():
 
 # Khởi tạo luồng chạy nền daemon
 threading.Thread(target=run_retention_worker, daemon=True).start()
+# Trigger reload: config updated
+
