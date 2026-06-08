@@ -48,12 +48,12 @@
   color: hsl(var(--text-secondary));
   border-radius: var(--radius-sm);
   font-weight: 500;
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   transition: var(--transition-fast);
 }
 
 .navLink span {
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .navLink:hover {
@@ -86,7 +86,7 @@
   border: none;
   padding: 8px;
   border-radius: var(--radius-sm);
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
   display: flex;
@@ -98,7 +98,7 @@
 }
 
 .logBtn span {
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .logBtn:hover {
@@ -125,13 +125,13 @@
   gap: 8px;
   padding: 6px 8px;
   color: hsl(var(--text-muted));
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   border-radius: var(--radius-sm);
   transition: var(--transition-fast);
 }
 
 .footerLink span {
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .footerLink:hover {

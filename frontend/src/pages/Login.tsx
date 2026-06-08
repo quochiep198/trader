@@ -57,7 +57,11 @@ export const Login: React.FC = () => {
         // Visual transition corresponding to HTML JS mockup:
         // Delay 1s to show the beautiful visual success state transition
         setSuccess(true);
-        login(response.data.access_token, response.data.user, rememberMe);
+        setLoading(false);
+        setTimeout(() => {
+          login(response.data.access_token, response.data.user, rememberMe);
+          window.location.hash = '#dashboard';
+        }, 1000);
         console.log('Login successful!', response.data);
       }
     } catch (error: any) {
@@ -67,7 +71,6 @@ export const Login: React.FC = () => {
       } else {
         setApiError(MessageProperties.CONNECTION_FAILED);
       }
-    } finally {
       setLoading(false);
     }
   };

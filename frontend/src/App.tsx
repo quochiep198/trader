@@ -22,6 +22,12 @@ function AppContent() {
     };
   }, []);
 
+  useEffect(() => {
+    if (isAuthenticated && (hash === '#login' || hash === '#register' || !hash)) {
+      window.location.hash = '#dashboard';
+    }
+  }, [isAuthenticated, hash]);
+
   // Đang tải trạng thái xác thực
   if (loading) {
     return (
@@ -41,7 +47,6 @@ function AppContent() {
 
   // Điều hướng bảo mật (Auth Guard)
   if (!isAuthenticated) {
-
     if (hash === '#register') {
       return <Register />;
     }
@@ -50,10 +55,6 @@ function AppContent() {
 
   // Các trang chỉ dành cho người dùng đã đăng nhập
   switch (hash) {
-    case '#register':
-      return <Register />;
-    case '#login':
-      return <Login />;
     case '#pre-trade':
       return (
         <Layout title={MessageProperties.PRETRADE_PAGE_TITLE}>
