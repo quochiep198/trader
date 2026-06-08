@@ -374,7 +374,7 @@ export default function PreTradeCheck() {
                 <div className={styles.formGroup}>
                   <label className={styles.label}>{MessageProperties.PRETRADE_ENTRY_PRICE_LABEL}</label>
                   <div className={styles.inputWrapper}>
-                    <span className={styles.inputPrefix}>$</span>
+                    <span className={styles.inputPrefix}>đ</span>
                     <input
                       type="number"
                       step="any"
@@ -389,7 +389,7 @@ export default function PreTradeCheck() {
                 <div className={styles.formGroup}>
                   <label className={styles.label}>{MessageProperties.PRETRADE_SELL_PRICE_LABEL}</label>
                   <div className={styles.inputWrapper}>
-                    <span className={styles.inputPrefix}>$</span>
+                    <span className={styles.inputPrefix}>đ</span>
                     <input
                       type="number"
                       step="any"
@@ -417,7 +417,7 @@ export default function PreTradeCheck() {
                 <div className={styles.formGroup}>
                   <label className={styles.label}>Average Entry Price</label>
                   <div className={styles.inputWrapper}>
-                    <span className={styles.inputPrefix}>$</span>
+                    <span className={styles.inputPrefix}>đ</span>
                     <input
                       type="number"
                       step="any"
@@ -482,15 +482,18 @@ export default function PreTradeCheck() {
 
             <div className={styles.formGroup} style={{ marginBottom: '20px' }}>
               <label className={styles.label}>{MessageProperties.PRETRADE_STOP_LOSS_LABEL}</label>
-              <input
-                type="number"
-                step="any"
-                disabled={action === 'SELL_TO_CLOSE'}
-                className={`${styles.input} ${styles.inputMono}`}
-                placeholder={action === 'SELL_TO_CLOSE' ? "DISABLED" : MessageProperties.PRETRADE_STOP_LOSS_PLACEHOLDER}
-                value={action === 'SELL_TO_CLOSE' ? '' : stopLoss}
-                onChange={(e) => setStopLoss(e.target.value)}
-              />
+              <div className={styles.inputWrapper}>
+                <span className={styles.inputPrefix}>đ</span>
+                <input
+                  type="number"
+                  step="any"
+                  disabled={action === 'SELL_TO_CLOSE'}
+                  className={`${styles.input} ${styles.inputMono} ${styles.inputWithPrefix}`}
+                  placeholder={action === 'SELL_TO_CLOSE' ? "DISABLED" : MessageProperties.PRETRADE_STOP_LOSS_PLACEHOLDER}
+                  value={action === 'SELL_TO_CLOSE' ? '' : stopLoss}
+                  onChange={(e) => setStopLoss(e.target.value)}
+                />
+              </div>
               {action === 'BUY' && !stopLoss && (
                 <p className={styles.warningText}>
                   <span className={`material-symbols-outlined ${styles.warningIcon}`}>warning</span>
@@ -501,15 +504,18 @@ export default function PreTradeCheck() {
 
             <div className={styles.formGroup} style={{ marginBottom: '24px' }}>
               <label className={styles.label}>{MessageProperties.PRETRADE_TAKE_PROFIT_LABEL}</label>
-              <input
-                type="number"
-                step="any"
-                disabled={action === 'SELL_TO_CLOSE'}
-                className={`${styles.input} ${styles.inputMono}`}
-                placeholder={action === 'SELL_TO_CLOSE' ? "DISABLED" : MessageProperties.PRETRADE_TAKE_PROFIT_PLACEHOLDER}
-                value={action === 'SELL_TO_CLOSE' ? '' : takeProfit}
-                onChange={(e) => setTakeProfit(e.target.value)}
-              />
+              <div className={styles.inputWrapper}>
+                <span className={styles.inputPrefix}>đ</span>
+                <input
+                  type="number"
+                  step="any"
+                  disabled={action === 'SELL_TO_CLOSE'}
+                  className={`${styles.input} ${styles.inputMono} ${styles.inputWithPrefix}`}
+                  placeholder={action === 'SELL_TO_CLOSE' ? "DISABLED" : MessageProperties.PRETRADE_TAKE_PROFIT_PLACEHOLDER}
+                  value={action === 'SELL_TO_CLOSE' ? '' : takeProfit}
+                  onChange={(e) => setTakeProfit(e.target.value)}
+                />
+              </div>
             </div>
 
             <div className={styles.riskRewardContainer}>

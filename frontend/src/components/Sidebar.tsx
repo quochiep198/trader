@@ -32,13 +32,13 @@ export const Sidebar: React.FC = () => {
 
       {/* Navigation Links */}
       <nav className={styles.nav}>
-        <a 
+        {/* <a 
           href="#dashboard" 
           className={`${styles.navLink} ${currentHash === '#dashboard' ? styles.activeLink : ''}`}
         >
           <span className="material-symbols-outlined">dashboard</span>
           <span>Dashboard</span>
-        </a>
+        </a> */}
         <a 
           href="#pre-trade" 
           className={`${styles.navLink} ${currentHash === '#pre-trade' ? styles.activeLink : ''}`}
@@ -53,7 +53,7 @@ export const Sidebar: React.FC = () => {
           <span className="material-symbols-outlined">menu_book</span>
           <span>Trade Journal</span>
         </a>
-        <a 
+        {/* <a 
           href="#rules" 
           className={`${styles.navLink} ${currentHash === '#rules' ? styles.activeLink : ''}`}
         >
@@ -66,11 +66,11 @@ export const Sidebar: React.FC = () => {
         >
           <span className="material-symbols-outlined">settings</span>
           <span>Settings</span>
-        </a>
+        </a> */}
       </nav>
 
       {/* Log Trade Button (UI Trigger) */}
-      <div className={styles.actionSection}>
+      {/* <div className={styles.actionSection}>
         <button 
           className={styles.logBtn} 
           onClick={() => alert('Log New Trade feature is coming soon!')}
@@ -78,14 +78,14 @@ export const Sidebar: React.FC = () => {
           <span className="material-symbols-outlined">add</span>
           <span>Log New Trade</span>
         </button>
-      </div>
+      </div> */}
 
       {/* Footer Support & Sign Out */}
       <div className={styles.footerNav}>
-        <a href="#support" className={styles.footerLink}>
+        {/* <a href="#support" className={styles.footerLink}>
           <span className="material-symbols-outlined">help_outline</span>
           <span>Support</span>
-        </a>
+        </a> */}
         <a href="#logout" className={styles.footerLink} onClick={handleLogout}>
           <span className="material-symbols-outlined">logout</span>
           <span>Sign Out</span>
