@@ -83,6 +83,7 @@
     padding: 12px 16px;
     gap: 8px;
     text-align: center;
+    margin-bottom: 60px; /* leaves room for mobile bottom navigation */
   }
   
   .center {

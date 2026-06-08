@@ -55,3 +55,10 @@
   --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+@media (max-width: 767px) {
+  :root {
+    --sidebar-width: 0px;
+    --content-padding: 12px;
+  }
+}

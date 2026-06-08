@@ -748,3 +748,48 @@
   margin-bottom: 24px;
   font-size: 0.875rem;
 }
+
+@media (max-width: 767px) {
+  .headerSection {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .scoreWrapper {
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .scoreVal {
+    font-size: 2rem;
+  }
+
+  .overlayCard {
+    padding: 24px 16px;
+    margin: 10px;
+    width: 100%;
+  }
+
+  .footerBar {
+    bottom: 72px; /* Sits above the mobile bottom nav bar */
+  }
+
+  .cooldownTitle {
+    font-size: 1.35rem;
+    text-align: center;
+  }
+
+  .cooldownActions, .resultActions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .cooldownCancel, .cooldownProceed, .resultClose, .resultConfirm {
+    width: 100%;
+    padding: 12px;
+    text-align: center;
+  }
+}

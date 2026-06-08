@@ -572,3 +572,21 @@
   color: hsl(var(--text-secondary));
   margin-top: 2px;
 }
+
+@media (max-width: 639px) {
+  .actionFooter {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+  }
+  .discardBtn, .saveBtn {
+    width: 100%;
+    justify-content: center;
+  }
+  .toast {
+    left: 16px;
+    right: 16px;
+    bottom: 80px; /* sits above mobile bottom navigation */
+    padding: 12px 16px;
+  }
+}
