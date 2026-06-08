@@ -1,6 +1,6 @@
 .bottombar {
   height: 48px;
-  margin-left: 260px;
+  margin-left: var(--sidebar-width);
   padding: 0 32px;
   background-color: hsl(var(--bg-main));
   border-top: 1px solid hsl(var(--border-color));

@@ -56,7 +56,7 @@
   --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   :root {
     --sidebar-width: 0px;
     --content-padding: 12px;

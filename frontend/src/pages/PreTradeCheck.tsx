@@ -638,14 +638,14 @@ export default function PreTradeCheck() {
         </div>
 
         {/* Disclaimer Vietnamese */}
-        <div className="col-span-12">
+        <div className={styles.fullWidth}>
           <p className={styles.disclaimerBanner}>
             * {MessageProperties.PRETRADE_DISCLAIMER_VN}
           </p>
         </div>
 
         {/* Sticky CTA Bar */}
-        <div className="col-span-12" style={{ width: '100%' }}>
+        <div className={styles.fullWidth} style={{ width: '100%' }}>
           <div className={styles.footerBar}>
             <div className={styles.footerLeft}>
               <div className={styles.footerStatusIcon}>

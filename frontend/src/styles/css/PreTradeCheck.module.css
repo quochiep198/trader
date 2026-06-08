@@ -314,6 +314,7 @@
   position: sticky;
   bottom: 24px;
   z-index: 40;
+  width: 100%;
   background: rgba(30, 41, 59, 0.7);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -749,7 +750,7 @@
   font-size: 0.875rem;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .headerSection {
     flex-direction: column;
     align-items: flex-start;
@@ -767,10 +768,14 @@
     font-size: 2rem;
   }
 
+  .overlay {
+    padding: 12px;
+  }
+
   .overlayCard {
     padding: 24px 16px;
-    margin: 10px;
     width: 100%;
+    max-width: 100%;
   }
 
   .footerBar {
@@ -793,3 +798,8 @@
     text-align: center;
   }
 }
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
